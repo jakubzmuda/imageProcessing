@@ -68,10 +68,8 @@ public class App extends Application {
         openImageItem.setOnAction(t -> {
             FileChooser fileChooser = new FileChooser();
 
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("any file", "*");
-//            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-//            FileChooser.ExtensionFilter extFilterBMP = new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.BMP");
-            fileChooser.getExtensionFilters().addAll(extFilterJPG);
+            FileChooser.ExtensionFilter anyFile = new FileChooser.ExtensionFilter("any file", "*");
+            fileChooser.getExtensionFilters().addAll(anyFile);
 
             File file = fileChooser.showOpenDialog(null);
 
