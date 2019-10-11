@@ -10,6 +10,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,22 +23,50 @@ import java.io.IOException;
 
 public class App extends Application {
 
+    private static int appWidth = 1600;
+    private static int appHeight = 1000;
+
+    private static long imageContainerWidth = Math.round(appWidth * 0.7);
+
+    private static long secondaryPaneWidth = Math.round(appWidth * 0.3);
+
     @Override
     public void start(Stage primaryStage) {
         VBox vBox = buildMainBox();
         primaryStage.setTitle("Image processing");
-        primaryStage.setScene(new Scene(vBox, 1200, 1000));
+        primaryStage.setScene(new Scene(vBox, appWidth, appHeight));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
     private VBox buildMainBox() {
         ImageView imageView = new ImageView();
-        ScrollPane imageContainer = new ScrollPane(imageView);
-
         MenuBar menuBar = buildMenuBox(imageView);
         VBox mainBox = new VBox(menuBar);
-        mainBox.getChildren().add(imageContainer);
+        ScrollPane imageContainer = buildImageContainer(imageView);
+
+        GridPane secondaryPane = buildSecondaryPane();
+
+        GridPane gridPane = new GridPane();
+        gridPane.add(imageContainer, 0, 0);
+        gridPane.add(secondaryPane, 1, 0);
+
+        mainBox.getChildren().add(gridPane);
         return mainBox;
+    }
+
+    private GridPane buildSecondaryPane() {
+        GridPane gridPane = new GridPane();
+        gridPane.setPrefWidth(secondaryPaneWidth);
+        gridPane.setPrefHeight(appHeight);
+        return gridPane;
+    }
+
+    private ScrollPane buildImageContainer(ImageView imageView) {
+        ScrollPane imageContainer = new ScrollPane(imageView);
+        imageContainer.setPrefWidth(imageContainerWidth);
+        imageContainer.setPrefHeight(appHeight);
+        return imageContainer;
     }
 
     private MenuBar buildMenuBox(ImageView imageView) {
