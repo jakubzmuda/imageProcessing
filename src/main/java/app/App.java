@@ -3,12 +3,11 @@ package app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -33,10 +32,11 @@ public class App extends Application {
 
     private VBox buildMainBox() {
         ImageView imageView = new ImageView();
+        ScrollPane imageContainer = new ScrollPane(imageView);
 
         MenuBar menuBar = buildMenuBox(imageView);
         VBox mainBox = new VBox(menuBar);
-        mainBox.getChildren().add(imageView);
+        mainBox.getChildren().add(imageContainer);
         return mainBox;
     }
 
@@ -65,6 +65,7 @@ public class App extends Application {
 
     private MenuItem buildOpenImageMenuItem(ImageView imageView) {
         MenuItem openImageItem = new MenuItem("Otwórz");
+
         openImageItem.setOnAction(t -> {
             FileChooser fileChooser = new FileChooser();
 
@@ -82,7 +83,6 @@ public class App extends Application {
         });
         return openImageItem;
     }
-
 
     public static void main(String[] args) {
         launch(args);
