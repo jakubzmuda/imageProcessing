@@ -71,9 +71,17 @@ public class App extends Application {
 
     private MenuBar buildMenuBox(ImageView imageView) {
         Menu fileMenu = buildFileMenuTab(imageView);
+        Menu lab1Menu = buildLab1MenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().add(fileMenu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu);
         return menuBar;
+    }
+
+    private Menu buildLab1MenuTab() {
+        MenuItem histogramItem = buildHistogramMenuItem();
+        Menu menu = new Menu("Lab 1");
+        menu.getItems().addAll(histogramItem);
+        return menu;
     }
 
     private Menu buildFileMenuTab(ImageView imageView) {
@@ -88,6 +96,13 @@ public class App extends Application {
         MenuItem closeItem = new MenuItem("Zamknij");
         closeItem.setOnAction(e -> {
             Platform.exit();
+        });
+        return closeItem;
+    }
+
+    private MenuItem buildHistogramMenuItem() {
+        MenuItem closeItem = new MenuItem("Histogram");
+        closeItem.setOnAction(e -> {
         });
         return closeItem;
     }
