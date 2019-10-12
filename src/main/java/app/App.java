@@ -16,7 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -24,7 +23,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Stack;
 
 
 public class App extends Application {
@@ -76,8 +74,9 @@ public class App extends Application {
     private MenuBar buildMenuBox(ImageView imageView) {
         Menu fileMenu = buildFileMenuTab(imageView);
         Menu lab1Menu = buildLab1MenuTab();
+        Menu lab2Menu = buildLab2MenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, lab1Menu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu);
         return menuBar;
     }
 
@@ -85,6 +84,17 @@ public class App extends Application {
         MenuItem histogramItem = buildHistogramMenuItem();
         Menu menu = new Menu("Lab 1");
         menu.getItems().addAll(histogramItem);
+        return menu;
+    }
+
+    private Menu buildLab2MenuTab() {
+        Menu menu = new Menu("Lab 2");
+        MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
+        stretchImageItem.setOnAction(e -> {
+            new Stretch().stretch();
+        });
+
+        menu.getItems().addAll(stretchImageItem);
         return menu;
     }
 
