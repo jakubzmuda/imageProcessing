@@ -3,6 +3,7 @@ package app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Menu;
@@ -12,6 +13,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,18 +47,24 @@ public class App extends Application {
 
     private VBox buildMainBox() {
         ImageView imageView = new ImageView();
+        StackPane stackImageView = new StackPane(imageView);
         MenuBar menuBar = buildMenuBox(imageView);
         VBox mainBox = new VBox(menuBar);
-        ScrollPane imageContainer = buildImageContainer(imageView);
+        ScrollPane imageContainer = buildImageContainer(stackImageView);
+
+        imageContainer.setFitToHeight(true);
+        imageContainer.setFitToWidth(true);
 
         GridPane gridPane = new GridPane();
         gridPane.add(imageContainer, 0, 0);
+
+        gridPane.setAlignment(Pos.TOP_CENTER);
 
         mainBox.getChildren().add(gridPane);
         return mainBox;
     }
 
-    private ScrollPane buildImageContainer(ImageView imageView) {
+    private ScrollPane buildImageContainer(Pane imageView) {
         ScrollPane imageContainer = new ScrollPane(imageView);
         imageContainer.setPrefWidth(imageContainerWidth);
         imageContainer.setPrefHeight(appHeight);
