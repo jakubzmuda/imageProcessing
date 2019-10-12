@@ -91,7 +91,7 @@ public class App extends Application {
         Menu menu = new Menu("Lab 2");
         MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
         stretchImageItem.setOnAction(e -> {
-            new Stretch().stretch();
+            new Stretch().stretch(image);
         });
 
         menu.getItems().addAll(stretchImageItem);
