@@ -12,3 +12,10 @@
 .default-color2.chart-bar {
     -fx-bar-fill: blue;
 }
+
+.axis {
+    /*-fx-tick-label-fill: #914800;*/
+    /*-fx-font-family: Tahoma;*/
+    -fx-tick-length: 32;
+    -fx-minor-tick-length: 8;
+}

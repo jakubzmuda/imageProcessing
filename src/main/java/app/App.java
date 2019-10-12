@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -25,12 +26,14 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static int appWidth = 1200;
+    private static int appWidth = 1600;
     private static int appHeight = 800;
-
     private static long imageContainerWidth = Math.round(appWidth * 0.5);
-
     private static long secondaryPaneWidth = Math.round(appWidth * 0.5);
+
+    private Image image;
+    private BarChart<String, Number> barChart;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,7 +62,10 @@ public class App extends Application {
     }
 
     private Pane buildSecondaryPane() {
-        StackPane pane = new StackPane(new BarChartPainter().paintHistogram());
+        BarChart<String, Number> barChart = new BarChartPainter().paintHistogram();
+        barChart.setBarGap(0);
+        this.barChart = barChart;
+        StackPane pane = new StackPane(barChart);
         pane.setPrefWidth(secondaryPaneWidth);
         pane.setPrefHeight(appHeight);
         return pane;
@@ -116,19 +122,35 @@ public class App extends Application {
         openImageItem.setOnAction(t -> {
             FileChooser fileChooser = new FileChooser();
 
-            FileChooser.ExtensionFilter anyFile = new FileChooser.ExtensionFilter("any file", "*");
-            fileChooser.getExtensionFilters().addAll(anyFile);
+//            FileChooser.ExtensionFilter anyFile = new FileChooser.ExtensionFilter("any file/", "*");
+//            fileChooser.getExtensionFilters().addAll(anyFile);
 
             File file = fileChooser.showOpenDialog(null);
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                this.image = image;
+                this.buildHistogram();
                 imageView.setImage(image);
             } catch (IOException ignored) {
             }
         });
         return openImageItem;
+    }
+
+    private Pane buildHistogram() {
+        ImageHistogram imageHistogram = new ImageHistogram(image);
+        this.barChart.getData().clear();
+        if(imageHistogram.isSuccess()){
+            barChart.getData().addAll(
+                    //imageHistogram.getSeriesAlpha(),
+                    imageHistogram.getSeriesRed(),
+                    imageHistogram.getSeriesGreen(),
+                    imageHistogram.getSeriesBlue());
+        }
+
+        return null;
     }
 
     public static void main(String[] args) {
