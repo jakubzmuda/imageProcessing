@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Stack;
 
 
 public class App extends Application {
@@ -130,7 +132,19 @@ public class App extends Application {
 
     private void printHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);
+
+//        Text meanRed = new Text("średnia czerwony = " + histogramPainter.meanRed());
+//        Text meanGreen = new Text("średnia zielony = " + histogramPainter.meanGreen());
+//        Text meanBlue = new Text("średnia niebieski = " + histogramPainter.meanBlue());
+//
+//        GridPane texts = new GridPane();
+//        texts.add(meanRed, 0, 0);
+//        texts.add(meanGreen, 0, 1);
+//        texts.add(meanBlue, 0, 2);
+
+
         this.barChart = histogramPainter.paintChart();
+        StackPane container = new StackPane(barChart);
         if (histogramPainter.isSuccess()) {
             barChart.getData().addAll(
                     histogramPainter.getSeriesRed(),
@@ -140,9 +154,8 @@ public class App extends Application {
 
         Stage stage = new Stage();
         stage.setTitle("Histogram");
-        stage.setScene(new Scene(barChart, 1000, 800));
+        stage.setScene(new Scene(container, 1000, 800));
         stage.show();
-
     }
 
     public static void main(String[] args) {
