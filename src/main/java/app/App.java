@@ -11,6 +11,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,12 +25,12 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static int appWidth = 1600;
-    private static int appHeight = 1000;
+    private static int appWidth = 1200;
+    private static int appHeight = 800;
 
-    private static long imageContainerWidth = Math.round(appWidth * 0.7);
+    private static long imageContainerWidth = Math.round(appWidth * 0.5);
 
-    private static long secondaryPaneWidth = Math.round(appWidth * 0.3);
+    private static long secondaryPaneWidth = Math.round(appWidth * 0.5);
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,21 +47,22 @@ public class App extends Application {
         VBox mainBox = new VBox(menuBar);
         ScrollPane imageContainer = buildImageContainer(imageView);
 
-        GridPane secondaryPane = buildSecondaryPane();
+        Pane secondaryPane = buildSecondaryPane();
 
         GridPane gridPane = new GridPane();
         gridPane.add(imageContainer, 0, 0);
         gridPane.add(secondaryPane, 1, 0);
 
         mainBox.getChildren().add(gridPane);
+        mainBox.getStylesheets().add("app.css");
         return mainBox;
     }
 
-    private GridPane buildSecondaryPane() {
-        GridPane gridPane = new GridPane();
-        gridPane.setPrefWidth(secondaryPaneWidth);
-        gridPane.setPrefHeight(appHeight);
-        return gridPane;
+    private Pane buildSecondaryPane() {
+        StackPane pane = new StackPane(new BarChartPainter().paintHistogram());
+        pane.setPrefWidth(secondaryPaneWidth);
+        pane.setPrefHeight(appHeight);
+        return pane;
     }
 
     private ScrollPane buildImageContainer(ImageView imageView) {
