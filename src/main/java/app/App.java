@@ -93,13 +93,22 @@ public class App extends Application {
         Menu menu = new Menu("Lab 2");
         MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
         stretchImageItem.setOnAction(e -> {
-            Image newImage = new Stretch().stretch(image);
-            image = newImage;
-            imageView.setImage(newImage);
+            Image newImage = new ImageOperations().stretch(image);
+            updateImage(newImage);
+        });
+        MenuItem negateImageItem = new MenuItem("Negacja");
+        negateImageItem.setOnAction(e -> {
+            Image newImage = new ImageOperations().negate(image);
+            updateImage(newImage);
         });
 
-        menu.getItems().addAll(stretchImageItem);
+        menu.getItems().addAll(stretchImageItem, negateImageItem);
         return menu;
+    }
+
+    private void updateImage(Image newImage) {
+        image = newImage;
+        imageView.setImage(newImage);
     }
 
     private Menu buildFileMenuTab(ImageView imageView) {
@@ -136,8 +145,7 @@ public class App extends Application {
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                this.image = image;
-                imageView.setImage(image);
+                updateImage(image);
             } catch (IOException ignored) {
             }
         });
