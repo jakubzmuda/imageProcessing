@@ -1,6 +1,14 @@
 .bar-chart {
 }
 
+.chart {
+    -fx-padding: 1px;
+}
+
+.chart-content {
+    -fx-padding: 12px;
+}
+
 .default-color0.chart-bar {
     -fx-bar-fill: red;
 }

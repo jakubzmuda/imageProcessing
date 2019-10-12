@@ -27,7 +27,6 @@ public class HistogramPainter {
         image = src;
         success = false;
 
-        //init
         for (int i = 0; i < 256; i++) {
             alpha[i] = red[i] = green[i] = blue[i] = 0;
         }
@@ -37,7 +36,6 @@ public class HistogramPainter {
             return;
         }
 
-        //count pixels
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 int argb = pixelReader.getArgb(x, y);
@@ -50,7 +48,6 @@ public class HistogramPainter {
                 red[r]++;
                 green[g]++;
                 blue[b]++;
-
             }
         }
 
@@ -63,8 +60,6 @@ public class HistogramPainter {
         seriesGreen.setName("zielony");
         seriesBlue.setName("niebieski");
 
-        //copy alpha[], red[], green[], blue[]
-        //to seriesAlpha, seriesRed, seriesGreen, seriesBlue
         for (int i = 0; i < 256; i++) {
             seriesAlpha.getData().add(new XYChart.Data(String.valueOf(i), alpha[i]));
             seriesRed.getData().add(new XYChart.Data(String.valueOf(i), red[i]));
@@ -101,11 +96,12 @@ public class HistogramPainter {
 
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
 
-        barChart.setTitle("Histogram");
-
         barChart.getStylesheets().add("app.css");
 
-//        barChart.setBarGap(0);
+        barChart.setBarGap(0);
+
+        barChart.horizontalGridLinesVisibleProperty().setValue(false);
+        barChart.verticalGridLinesVisibleProperty().setValue(false);
 
         return barChart;
     }
