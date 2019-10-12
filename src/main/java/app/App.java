@@ -132,17 +132,6 @@ public class App extends Application {
 
     private void printHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);
-
-//        Text meanRed = new Text("średnia czerwony = " + histogramPainter.meanRed());
-//        Text meanGreen = new Text("średnia zielony = " + histogramPainter.meanGreen());
-//        Text meanBlue = new Text("średnia niebieski = " + histogramPainter.meanBlue());
-//
-//        GridPane texts = new GridPane();
-//        texts.add(meanRed, 0, 0);
-//        texts.add(meanGreen, 0, 1);
-//        texts.add(meanBlue, 0, 2);
-
-
         this.barChart = histogramPainter.paintChart();
         StackPane container = new StackPane(barChart);
         if (histogramPainter.isSuccess()) {

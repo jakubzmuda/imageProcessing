@@ -49,7 +49,9 @@ public class HistogramPainter {
                 green[g]++;
                 blue[b]++;
 
-
+                HashMap<Integer, Canals> map = new HashMap<>();
+                map.put(y, new Canals(r, g, b));
+                imageMap.put(x, map);
             }
         }
 
@@ -107,29 +109,4 @@ public class HistogramPainter {
 
         return barChart;
     }
-
-    public float meanRed() {
-        int sum = 0;
-        for(int i=0;i<256;i++) {
-            sum += red[i];
-        }
-        return sum/256f;
-    }
-
-    public float meanGreen() {
-        int sum = 0;
-        for(int i=0;i<256;i++) {
-            sum += green[i];
-        }
-        return sum/256f;
-    }
-
-    public float meanBlue() {
-        int sum = 0;
-        for(int i=0;i<256;i++) {
-            sum += blue[i] * i;
-        }
-        return sum/256f;
-    }
-
 }
