@@ -32,6 +32,7 @@ public class App extends Application {
     private static long imageContainerWidth = Math.round(appWidth);
 
     private Image image;
+    private ImageView imageView;
     private BarChart<String, Number> barChart;
     private Stage primaryStage;
 
@@ -47,6 +48,7 @@ public class App extends Application {
 
     private VBox buildMainBox() {
         ImageView imageView = new ImageView();
+        this.imageView = imageView;
         StackPane stackImageView = new StackPane(imageView);
         MenuBar menuBar = buildMenuBox(imageView);
         VBox mainBox = new VBox(menuBar);
@@ -91,7 +93,9 @@ public class App extends Application {
         Menu menu = new Menu("Lab 2");
         MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
         stretchImageItem.setOnAction(e -> {
-            new Stretch().stretch(image);
+            Image newImage = new Stretch().stretch(image);
+            image = newImage;
+            imageView.setImage(newImage);
         });
 
         menu.getItems().addAll(stretchImageItem);
