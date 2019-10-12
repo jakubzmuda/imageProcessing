@@ -42,10 +42,11 @@ public class ImageConverter {
         int[] data = new int[width * height];
         int i = 0;
         for (int y = 0; y < height; y++) {
-            int red = (y * 255) / (height - 1);
             for (int x = 0; x < width; x++) {
-                int green = (x * 255) / (width - 1);
-                int blue = 128;
+                Canals entry = imageMap.get(x).get(y);
+                int red = entry.red;
+                int green = entry.green;
+                int blue = entry.blue;
                 data[i++] = (red << 16) | (green << 8) | blue;
             }
         }

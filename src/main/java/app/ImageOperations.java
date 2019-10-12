@@ -16,6 +16,11 @@ public class ImageOperations {
 
     public Image negate(Image image) {
         Map<Integer, Map<Integer, Canals>> imageMap = imageConverter.toCanals(image);
+        imageMap.forEach((x, value) -> {
+            value.forEach((y, canals) -> {
+                value.put(y, new Canals(256-canals.red, 256-canals.green, 256-canals.blue));
+            });
+        });
 
         return imageConverter.toImage(imageMap);
     }
