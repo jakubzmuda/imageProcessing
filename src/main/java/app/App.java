@@ -26,14 +26,13 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static int appWidth = 1600;
-    private static int appHeight = 800;
-    private static long imageContainerWidth = Math.round(appWidth * 0.5);
-    private static long secondaryPaneWidth = Math.round(appWidth * 0.5);
+    private static int appWidth = 800;
+    private static int appHeight = 600;
+    private static long imageContainerWidth = Math.round(appWidth);
 
     private Image image;
     private BarChart<String, Number> barChart;
-
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,6 +41,7 @@ public class App extends Application {
         primaryStage.setScene(new Scene(vBox, appWidth, appHeight));
         primaryStage.setResizable(false);
         primaryStage.show();
+        this.primaryStage = primaryStage;
     }
 
     private VBox buildMainBox() {
@@ -50,25 +50,11 @@ public class App extends Application {
         VBox mainBox = new VBox(menuBar);
         ScrollPane imageContainer = buildImageContainer(imageView);
 
-        Pane secondaryPane = buildSecondaryPane();
-
         GridPane gridPane = new GridPane();
         gridPane.add(imageContainer, 0, 0);
-        gridPane.add(secondaryPane, 1, 0);
 
         mainBox.getChildren().add(gridPane);
-        mainBox.getStylesheets().add("app.css");
         return mainBox;
-    }
-
-    private Pane buildSecondaryPane() {
-        BarChart<String, Number> barChart = new BarChartPainter().paintHistogram();
-        barChart.setBarGap(0);
-        this.barChart = barChart;
-        StackPane pane = new StackPane(barChart);
-        pane.setPrefWidth(secondaryPaneWidth);
-        pane.setPrefHeight(appHeight);
-        return pane;
     }
 
     private ScrollPane buildImageContainer(ImageView imageView) {
@@ -112,6 +98,7 @@ public class App extends Application {
     private MenuItem buildHistogramMenuItem() {
         MenuItem closeItem = new MenuItem("Histogram");
         closeItem.setOnAction(e -> {
+            this.printHistogram();
         });
         return closeItem;
     }
@@ -121,17 +108,12 @@ public class App extends Application {
 
         openImageItem.setOnAction(t -> {
             FileChooser fileChooser = new FileChooser();
-
-//            FileChooser.ExtensionFilter anyFile = new FileChooser.ExtensionFilter("any file/", "*");
-//            fileChooser.getExtensionFilters().addAll(anyFile);
-
             File file = fileChooser.showOpenDialog(null);
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                 this.image = image;
-                this.buildHistogram();
                 imageView.setImage(image);
             } catch (IOException ignored) {
             }
@@ -139,18 +121,21 @@ public class App extends Application {
         return openImageItem;
     }
 
-    private Pane buildHistogram() {
-        ImageHistogram imageHistogram = new ImageHistogram(image);
-        this.barChart.getData().clear();
-        if(imageHistogram.isSuccess()){
+    private void printHistogram() {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        this.barChart = histogramPainter.paintChart();
+        if (histogramPainter.isSuccess()) {
             barChart.getData().addAll(
-                    //imageHistogram.getSeriesAlpha(),
-                    imageHistogram.getSeriesRed(),
-                    imageHistogram.getSeriesGreen(),
-                    imageHistogram.getSeriesBlue());
+                    histogramPainter.getSeriesRed(),
+                    histogramPainter.getSeriesGreen(),
+                    histogramPainter.getSeriesBlue());
         }
 
-        return null;
+        Stage stage = new Stage();
+        stage.setTitle("Histogram");
+        stage.setScene(new Scene(barChart, 1000, 800));
+        stage.show();
+
     }
 
     public static void main(String[] args) {

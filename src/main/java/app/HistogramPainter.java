@@ -1,10 +1,13 @@
 package app;
 
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
-public class ImageHistogram {
+public class HistogramPainter {
 
     private Image image;
 
@@ -20,7 +23,7 @@ public class ImageHistogram {
 
     private boolean success;
 
-    ImageHistogram(Image src) {
+    HistogramPainter(Image src) {
         image = src;
         success = false;
 
@@ -56,9 +59,9 @@ public class ImageHistogram {
         seriesGreen = new XYChart.Series();
         seriesBlue = new XYChart.Series();
         seriesAlpha.setName("alpha");
-        seriesRed.setName("red");
-        seriesGreen.setName("green");
-        seriesBlue.setName("blue");
+        seriesRed.setName("czerwony");
+        seriesGreen.setName("zielony");
+        seriesBlue.setName("niebieski");
 
         //copy alpha[], red[], green[], blue[]
         //to seriesAlpha, seriesRed, seriesGreen, seriesBlue
@@ -90,5 +93,20 @@ public class ImageHistogram {
 
     public XYChart.Series getSeriesBlue() {
         return seriesBlue;
+    }
+
+    public BarChart<String, Number> paintChart() {
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+
+        barChart.setTitle("Histogram");
+
+        barChart.getStylesheets().add("app.css");
+
+//        barChart.setBarGap(0);
+
+        return barChart;
     }
 }
