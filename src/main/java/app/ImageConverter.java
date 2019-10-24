@@ -5,45 +5,40 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ImageConverter {
 
-    public Map<Integer, Map<Integer, Canals>> toCanals(Image image) {
-        Map<Integer, Map<Integer, Canals>> imageMap = new HashMap<>();
+    public ImageMap toImageMap(Image image) {
+        ImageMap imageMap = new ImageMap();
 
         PixelReader pixelReader = image.getPixelReader();
         for (int y = 0; y < image.getHeight(); y++) {
-            HashMap<Integer, Canals> map = new HashMap<>();
-
             for (int x = 0; x < image.getWidth(); x++) {
                 int argb = pixelReader.getArgb(x, y);
                 int a = (0xff & (argb >> 24));
                 int r = (0xff & (argb >> 16));
                 int g = (0xff & (argb >> 8));
                 int b = (0xff & argb);
-
-                map.put(x, new Canals(r, g, b));
+                imageMap.put(x, y, new Canals(r, g, b));
             }
-            imageMap.put(y, map);
         }
         return imageMap;
     }
 
-    public Image toImage(Map<Integer, Map<Integer, Canals>> imageMap) {
-        int height = imageMap.size();
-        int width = imageMap.get(0).size();
+    public Image toImage(ImageMap imageMap) {
+        int height = imageMap.height();
+        int width = imageMap.width();
 
         return buildImage(width, height, imageMap);
     }
 
-    public Image buildImage(int width, int height, Map<Integer, Map<Integer, Canals>> imageMap) {
+    public Image buildImage(int width, int height, ImageMap imageMap) {
         int[] data = new int[width * height];
         int i = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Canals entry = imageMap.get(y).get(x);
+                Canals entry = imageMap.get(x, y);
                 int red = entry.red;
                 int green = entry.green;
                 int blue = entry.blue;

@@ -93,7 +93,7 @@ public class App extends Application {
         Menu menu = new Menu("Lab 2");
         MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
         stretchImageItem.setOnAction(e -> {
-            Image newImage = new ImageOperations().stretch(image);
+            Image newImage = new ImageOperations().stretchHistogram(image);
             updateImage(newImage);
         });
         MenuItem negateImageItem = new MenuItem("Negacja");
@@ -139,10 +139,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-//            FileChooser fileChooser = new FileChooser(); // TODO revert me
-//            File file = fileChooser.showOpenDialog(null);
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource("butterfly.bmp").getFile());
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(null);
+//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+//            File file = new File(classLoader.getResource("butterfly.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
