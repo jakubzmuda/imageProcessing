@@ -32,8 +32,8 @@ public class ImageConverter {
     }
 
     public Image toImage(Map<Integer, Map<Integer, Canals>> imageMap) {
-        int width = imageMap.size();
-        int height = imageMap.get(0).size();
+        int height = imageMap.size();
+        int width = imageMap.get(0).size();
 
         return buildImage(width, height, imageMap);
     }
@@ -43,7 +43,7 @@ public class ImageConverter {
         int i = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Canals entry = imageMap.get(x).get(y);
+                Canals entry = imageMap.get(y).get(x);
                 int red = entry.red;
                 int green = entry.green;
                 int blue = entry.blue;

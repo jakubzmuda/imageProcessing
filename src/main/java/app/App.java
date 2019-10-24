@@ -139,8 +139,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(null);
+//            FileChooser fileChooser = new FileChooser(); // TODO revert me
+//            File file = fileChooser.showOpenDialog(null);
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("butterfly.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
