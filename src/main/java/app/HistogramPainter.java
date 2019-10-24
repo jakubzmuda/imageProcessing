@@ -10,18 +10,6 @@ import javafx.scene.image.PixelReader;
 import java.util.HashMap;
 import java.util.Map;
 
-class Canals {
-    final int red;
-    final int green;
-    final int blue;
-
-    public Canals(int red, int green, int blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-    }
-}
-
 public class HistogramPainter {
 
     private Image image;
