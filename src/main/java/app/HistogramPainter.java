@@ -7,6 +7,21 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
+import java.util.HashMap;
+import java.util.Map;
+
+class Canals {
+    final int red;
+    final int green;
+    final int blue;
+
+    public Canals(int red, int green, int blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+    }
+}
+
 public class HistogramPainter {
 
     private Image image;
@@ -15,6 +30,8 @@ public class HistogramPainter {
     private long red[] = new long[256];
     private long green[] = new long[256];
     private long blue[] = new long[256];
+
+    private Map<Integer, Map<Integer, Canals>> imageMap = new HashMap<>();
 
     XYChart.Series seriesAlpha;
     XYChart.Series seriesRed;
@@ -28,7 +45,10 @@ public class HistogramPainter {
         success = false;
 
         for (int i = 0; i < 256; i++) {
-            alpha[i] = red[i] = green[i] = blue[i] = 0;
+            alpha[i] = 0;
+            red[i] = 0;
+            blue[i] = 0;
+            green[i] =  0;
         }
 
         PixelReader pixelReader = image.getPixelReader();
