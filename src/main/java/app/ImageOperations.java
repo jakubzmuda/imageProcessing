@@ -18,7 +18,7 @@ public class ImageOperations {
         Map<Integer, Map<Integer, Canals>> imageMap = imageConverter.toCanals(image);
         imageMap.forEach((x, value) -> {
             value.forEach((y, canals) -> {
-                value.put(y, new Canals(256-canals.red, 256-canals.green, 256-canals.blue));
+                value.put(y, new Canals(255-canals.red, 255-canals.green, 255-canals.blue));
             });
         });
 
