@@ -1,5 +1,7 @@
 package app;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple3;
 import javafx.scene.image.Image;
 
 public class ImageOperations {
