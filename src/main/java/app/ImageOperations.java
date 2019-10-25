@@ -33,7 +33,22 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
+    public Image equalizeHistogram(Image image) {
+        ImageMap imageMap = imageConverter.toImageMap(image);
+
+        imageMap.singlePointOperation((x, y, canals) -> {
+            int distribution = 0;
+            return null;
+        });
+
+        return imageConverter.toImage(imageMap);
+    }
+
     private int stretchSingleColorCanal(int current, int max, int min) {
         return (current - min) * (255 / max - min);
+    }
+
+    private int cumulativeDistribution() {
+        return 0; // todo
     }
 }

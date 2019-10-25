@@ -91,9 +91,14 @@ public class App extends Application {
 
     private Menu buildLab2MenuTab() {
         Menu menu = new Menu("Lab 2");
-        MenuItem stretchImageItem = new MenuItem("Rozciągnij obraz");
+        MenuItem stretchImageItem = new MenuItem("Rozciągnięcie histogramu");
         stretchImageItem.setOnAction(e -> {
             Image newImage = new ImageOperations().stretchHistogram(image);
+            updateImage(newImage);
+        });
+        MenuItem equalizeImageItem = new MenuItem("Wyrównanie histogramu");
+        stretchImageItem.setOnAction(e -> {
+            Image newImage = new ImageOperations().equalizeHistogram(image);
             updateImage(newImage);
         });
         MenuItem negateImageItem = new MenuItem("Negacja");
@@ -158,12 +163,10 @@ public class App extends Application {
         HistogramPainter histogramPainter = new HistogramPainter(image);
         this.barChart = histogramPainter.paintChart();
         StackPane container = new StackPane(barChart);
-        if (histogramPainter.isSuccess()) {
-            barChart.getData().addAll(
-                    histogramPainter.getSeriesRed(),
-                    histogramPainter.getSeriesGreen(),
-                    histogramPainter.getSeriesBlue());
-        }
+        barChart.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
 
         Stage stage = new Stage();
         stage.setTitle("Histogram");

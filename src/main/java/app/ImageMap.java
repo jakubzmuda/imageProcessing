@@ -58,26 +58,6 @@ public class ImageMap {
         return currentLowest;
     }
 
-    public int maxGreenCanalValue() {
-        return 0;
-    }
-
-    public int maxBlueCanalValue() {
-        return 0;
-    }
-
-    public int minRedCanalValue() {
-        return 0;
-    }
-
-    public int minGreenValue() {
-        return 0;
-    }
-
-    public int minBlueValue() {
-        return 0;
-    }
-
     public int height() {
         return map.get(0).size();
     }
@@ -92,5 +72,32 @@ public class ImageMap {
                 operator.apply(x, y, canals);
             });
         });
+    }
+
+    public Histogram histogram() {
+        int[] red = new int[256];
+        int[] green = new int[256];
+        int[] blue = new int[256];
+        for (int i = 0; i < 256; i++) {
+            red[i] = 0;
+            blue[i] = 0;
+            green[i] = 0;
+        }
+        for (Map.Entry<Integer, Map<Integer, Canals>> e : map.entrySet()) {
+            Integer x = e.getKey();
+            Map<Integer, Canals> value = e.getValue();
+            for (Map.Entry<Integer, Canals> entry : value.entrySet()) {
+                Integer y = entry.getKey();
+                Canals canals = entry.getValue();
+                red[canals.red]++;
+                green[canals.green]++;
+                blue[canals.blue]++;
+            }
+        }
+        return new Histogram(red, green, blue);
+    }
+
+    public float cumulativeDistributionForRedCanal(int canalColor) {
+        return 0; // todo
     }
 }
