@@ -73,6 +73,28 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
+    public Image levelReduction(Image image, int[] p, int[] q) {
+        ImageMap imageMap = imageConverter.toImageMap(image);
+        imageMap.singlePointOperation((x, y, canals) -> {
+            int red = reduceLevelForColorCanal(canals.red, p, q);
+            int green = reduceLevelForColorCanal(canals.green, p, q);
+            int blue = reduceLevelForColorCanal(canals.blue, p, q);
+
+            return new Canals(red, green, blue);
+        });
+
+        return imageConverter.toImage(imageMap);
+    }
+
+    private int reduceLevelForColorCanal(int color, int[] p, int[] q) {
+        for (int i = 0; i < p.length; i++) {
+            if (color < p[i]) {
+                return q[i];
+            }
+        }
+        return q[q.length - 1];
+    }
+
     private int stretchSingleColorCanal(int current, int max, int min) {
         return (current - min) * (255 / max - min);
     }

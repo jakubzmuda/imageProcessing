@@ -24,6 +24,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class App extends Application {
@@ -181,10 +182,44 @@ public class App extends Application {
             container.add(doIt, 0, 3);
             stage.setScene(scene);
             stage.show();
+        });
+
+        MenuItem levelReductionItem = new MenuItem("Redukcja poziomów szarości");
+        levelReductionItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.setTitle("Redukcja poziomów szarości");
+
+            GridPane container = new GridPane();
+            Scene scene = new Scene(container, 400, 200);
+
+            Label pLabel = new Label("p (oddielone przecinkami) ");
+            TextField pField = new TextField("32, 64, 96, 128");
+            container.add(pLabel, 0, 0);
+            container.add(pField, 1, 0);
+
+            Label qLabel = new Label("q (oddielone przecinkami) ");
+            TextField qField = new TextField("50, 100, 150, 200");
+            container.add(qLabel, 0, 1);
+            container.add(qField, 1, 1);
+
+            Button doIt = new Button("Kontynuuj");
+            doIt.setOnAction((event) -> {
+                Image newImage = new ImageOperations().levelReduction(image,
+                        Arrays.stream(pField.getText().split(", ")).mapToInt(Integer::parseInt).toArray(),
+                        Arrays.stream(qField.getText().split(", ")).mapToInt(Integer::parseInt).toArray());
+                updateImage(newImage);
+                stage.close();
+            });
+
+            container.setAlignment(Pos.CENTER);
+            container.add(doIt, 0, 3);
+            stage.setScene(scene);
+            stage.show();
 
         });
 
-        menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem);
+
+        menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem, levelReductionItem);
         return menu;
     }
 
