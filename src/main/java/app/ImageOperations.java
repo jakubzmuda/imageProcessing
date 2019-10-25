@@ -9,8 +9,7 @@ public class ImageOperations {
     public Image negate(Image image) {
         ImageMap imageMap = imageConverter.toImageMap(image);
         imageMap.singlePointOperation((x, y, canals) -> {
-            imageMap.put(x, y, new Canals(255 - canals.red, 255 - canals.green, 255 - canals.blue));
-            return null;
+            return new Canals(255 - canals.red, 255 - canals.green, 255 - canals.blue);
         });
 
         return imageConverter.toImage(imageMap);
@@ -26,8 +25,7 @@ public class ImageOperations {
             int redValue = stretchSingleColorCanal(canals.red, maxValues.red, minValues.red);
             int greenValue = stretchSingleColorCanal(canals.green, maxValues.green, minValues.green);
             int blueValue = stretchSingleColorCanal(canals.blue, maxValues.blue, minValues.blue);
-            imageMap.put(x, y, new Canals(redValue, greenValue, blueValue));
-            return null;
+            return new Canals(redValue, greenValue, blueValue);
         });
 
         return imageConverter.toImage(imageMap);

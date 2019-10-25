@@ -66,10 +66,10 @@ public class ImageMap {
         return map.size();
     }
 
-    public void singlePointOperation(Function3<Integer, Integer, Canals, Void> operator) {
+    public void singlePointOperation(Function3<Integer, Integer, Canals, Canals> operator) {
         map.forEach((x, value) -> {
             value.forEach((y, canals) -> {
-                operator.apply(x, y, canals);
+                put(x, y, operator.apply(x, y, canals));
             });
         });
     }
