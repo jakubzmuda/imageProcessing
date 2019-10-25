@@ -6,20 +6,21 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -106,6 +107,42 @@ public class App extends Application {
             Image newImage = new ImageOperations().negate(image);
             updateImage(newImage);
         });
+        MenuItem thresholdingItem = new MenuItem("Progowanie");
+        thresholdingItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.setTitle("Progowanie");
+
+            GridPane container = new GridPane();
+            Scene scene = new Scene(container, 300, 200);
+
+            Label thresholdLabel = new Label("próg ");
+            TextField thresholdField = new TextField("128");
+            container.add(thresholdLabel, 0, 0);
+            container.add(thresholdField, 1, 0);
+
+            Label minLabel = new Label("min ");
+            TextField minField = new TextField("0");
+            container.add(minLabel, 0, 1);
+            container.add(minField, 1, 1);
+
+            Label maxLabel = new Label("max ");
+            TextField maxField = new TextField("255");
+            container.add(maxLabel, 0, 2);
+            container.add(maxField, 1, 2);
+
+            Button doIt = new Button("Kontynuuj");
+            doIt.setOnAction((event) -> {
+                Image newImage = new ImageOperations().threshold(image, Integer.parseInt(thresholdField.getText()), Integer.parseInt(minField.getText()), Integer.parseInt(maxField.getText()));
+                updateImage(newImage);
+                stage.close();
+            });
+
+            container.setAlignment(Pos.CENTER);
+            container.add(doIt, 0, 3);
+            stage.setScene(scene);
+            stage.show();
+
+        });
 
         menu.getItems().addAll(stretchImageItem, negateImageItem);
         return menu;
@@ -144,10 +181,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-//            FileChooser fileChooser = new FileChooser();
-//            File file = fileChooser.showOpenDialog(null);
-            ClassLoader classLoader = getClass().getClassLoader(); // fast load
-            File file = new File(classLoader.getResource("niedzkol.bmp").getFile());
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(null);
+//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+//            File file = new File(classLoader.getResource("niedzkol.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
