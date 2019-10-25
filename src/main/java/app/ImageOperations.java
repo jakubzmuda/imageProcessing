@@ -61,6 +61,18 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
+    public Image thresholdWithPreservation(Image image, int from, int to, int min) {
+        ImageMap imageMap = imageConverter.toImageMap(image);
+        imageMap.singlePointOperation((x, y, canals) -> {
+            return new Canals(
+                    canals.red > from && canals.red < to ? canals.red : min,
+                    canals.green > from && canals.green < to ? canals.green : min,
+                    canals.blue > from && canals.blue < to ? canals.blue : min);
+        });
+
+        return imageConverter.toImage(imageMap);
+    }
+
     private int stretchSingleColorCanal(int current, int max, int min) {
         return (current - min) * (255 / max - min);
     }

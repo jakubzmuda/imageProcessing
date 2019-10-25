@@ -141,6 +141,46 @@ public class App extends Application {
             container.add(doIt, 0, 3);
             stage.setScene(scene);
             stage.show();
+        });
+
+        MenuItem thresholdingWithPreservationItem = new MenuItem("Progowanie z zachowaniem poziomów szarości");
+        thresholdingWithPreservationItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.setTitle("Progowanie");
+
+            GridPane container = new GridPane();
+            Scene scene = new Scene(container, 300, 200);
+
+            Label thresholdFromLabel = new Label("od ");
+            TextField thresholdFromField = new TextField("32");
+            container.add(thresholdFromLabel, 0, 0);
+            container.add(thresholdFromField, 1, 0);
+
+            Label thresholdToLabel = new Label("do ");
+            TextField thresholdToField = new TextField("64");
+            container.add(thresholdToLabel, 0, 1);
+            container.add(thresholdToField, 1, 1);
+
+
+            Label minLabel = new Label("min ");
+            TextField minField = new TextField("0");
+            container.add(minLabel, 0, 2);
+            container.add(minField, 1, 2);
+
+            Button doIt = new Button("Kontynuuj");
+            doIt.setOnAction((event) -> {
+                Image newImage = new ImageOperations().thresholdWithPreservation(image,
+                        Integer.parseInt(thresholdFromField.getText()),
+                        Integer.parseInt(thresholdToField.getText()),
+                        Integer.parseInt(minField.getText()));
+                updateImage(newImage);
+                stage.close();
+            });
+
+            container.setAlignment(Pos.CENTER);
+            container.add(doIt, 0, 3);
+            stage.setScene(scene);
+            stage.show();
 
         });
 
