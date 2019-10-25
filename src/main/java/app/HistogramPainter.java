@@ -8,28 +8,22 @@ import javafx.scene.image.Image;
 
 public class HistogramPainter {
 
-    private Image image;
-
     private ImageMap imageMap;
 
-    private XYChart.Series seriesAlpha;
     private XYChart.Series seriesRed;
     private XYChart.Series seriesGreen;
     private XYChart.Series seriesBlue;
 
     private boolean success;
 
-    HistogramPainter(Image src) {
-        image = src;
+    HistogramPainter(Image image) {
         success = false;
 
         imageMap = new ImageConverter().toImageMap(image);
 
-        seriesAlpha = new XYChart.Series();
         seriesRed = new XYChart.Series();
         seriesGreen = new XYChart.Series();
         seriesBlue = new XYChart.Series();
-        seriesAlpha.setName("alpha");
         seriesRed.setName("czerwony");
         seriesGreen.setName("zielony");
         seriesBlue.setName("niebieski");

@@ -97,7 +97,7 @@ public class App extends Application {
             updateImage(newImage);
         });
         MenuItem equalizeImageItem = new MenuItem("Wyrównanie histogramu");
-        stretchImageItem.setOnAction(e -> {
+        equalizeImageItem.setOnAction(e -> {
             Image newImage = new ImageOperations().equalizeHistogram(image);
             updateImage(newImage);
         });
@@ -144,10 +144,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(null);
-//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
-//            File file = new File(classLoader.getResource("butterfly.bmp").getFile());
+//            FileChooser fileChooser = new FileChooser();
+//            File file = fileChooser.showOpenDialog(null);
+            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+            File file = new File(classLoader.getResource("niedzkol.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
