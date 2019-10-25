@@ -184,7 +184,7 @@ public class App extends Application {
 
         });
 
-        menu.getItems().addAll(stretchImageItem, negateImageItem);
+        menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem);
         return menu;
     }
 
