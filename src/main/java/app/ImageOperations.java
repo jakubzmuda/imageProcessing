@@ -86,6 +86,25 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
+    public Image spreadRange(Image image, int p1, int p2, int q1, int q2) {
+        ImageMap imageMap = imageConverter.toImageMap(image);
+        imageMap.singlePointOperation((x, y, canals) -> {
+            int r = spreadRangeSingleColorCanal(canals.red, p1, p2, q1, q2);
+            int g = spreadRangeSingleColorCanal(canals.green, p1, p2, q1, q2);
+            int b = spreadRangeSingleColorCanal(canals.blue, p1, p2, q1, q2);
+            return new Canals(r, g, b);
+        });
+
+        return imageConverter.toImage(imageMap);
+    }
+
+    private int spreadRangeSingleColorCanal(int color, int p1, int p2, int q1, int q2) {
+        float ratioP = (float) color / p2;
+        float deltaQ = (float) q2 - q1;
+
+        return Math.round(color <= p2 && color >= p1 ? (q1 + ratioP * deltaQ) : color);
+    }
+
     private int reduceLevelForColorCanal(int color, int[] p, int[] q) {
         for (int i = 0; i < p.length; i++) {
             if (color < p[i]) {

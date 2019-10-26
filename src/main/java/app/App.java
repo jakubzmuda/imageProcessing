@@ -20,7 +20,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -218,8 +217,55 @@ public class App extends Application {
 
         });
 
+        MenuItem spreadingP1P2Item = new MenuItem("Rozciąganie z zakresu p1-p2");
+        spreadingP1P2Item.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.setTitle("Rozciąganie z zakresu p1-p2");
 
-        menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem, levelReductionItem);
+            GridPane container = new GridPane();
+            Scene scene = new Scene(container, 400, 200);
+
+            Label p1Label = new Label("p1");
+            TextField p1Field = new TextField("50");
+            container.add(p1Label, 0, 0);
+            container.add(p1Field, 1, 0);
+
+            Label p2Label = new Label("p2");
+            TextField p2Field = new TextField("100");
+            container.add(p2Label, 0, 1);
+            container.add(p2Field, 1, 1);
+
+            Label q1Label = new Label("q1");
+            TextField q1Field = new TextField("0");
+            container.add(q1Label, 0, 2);
+            container.add(q1Field, 1, 2);
+
+            Label q2Label = new Label("q2");
+            TextField q2Field = new TextField("255");
+            container.add(q2Label, 0, 3);
+            container.add(q2Field, 1, 3);
+
+            Button doIt = new Button("Kontynuuj");
+            doIt.setOnAction((event) -> {
+                Image newImage = new ImageOperations().spreadRange(image,
+                        Integer.parseInt(p1Field.getText()),
+                        Integer.parseInt(p2Field.getText()),
+                        Integer.parseInt(q1Field.getText()),
+                        Integer.parseInt(q2Field.getText()));
+                updateImage(newImage);
+                stage.close();
+            });
+
+            container.setAlignment(Pos.CENTER);
+            container.add(doIt, 0, 4);
+            stage.setScene(scene);
+            stage.show();
+
+        });
+
+
+
+        menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem, levelReductionItem, spreadingP1P2Item);
         return menu;
     }
 
