@@ -15,14 +15,14 @@ public class Lab3 {
 
         GridPane container = new GridPane();
 
-        Label maskLabel = new Label("Maska ");
-        container.add(maskLabel, 0, 0);
+        Mask mask1 = new Mask(0, 1, 0, 1, 4, 1, 0, 1, 0);
+        container.add(mask1.asTable(), 0, 0);
 
-        Mask mask1 = new Mask(0, 1, 2, 3, 4, 5, 6, 7, 8);
-        container.add(mask1.asTable(), 0, 1);
+        Mask mask2 = new Mask(1, 1, 1, 1, 1, 1, 1, 1, 1);
+        container.add(mask2.asTable(), 1, 0);
 
-        Label previewLabel = new Label("Podgląd ");
-        container.add(previewLabel, 0, 2);
+        Mask mask3 = new Mask(1, 2, 1, 2, 4, 2, 1, 2, 1);
+        container.add(mask3.asTable(), 2, 0);
 
         Scene scene = new Scene(container, 600, 600);
 

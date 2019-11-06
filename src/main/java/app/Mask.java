@@ -24,6 +24,8 @@ public class Mask {
     public Pane asTable() {
         GridPane table = new GridPane();
 
+        table.setStyle("-fx-padding: 32px;");
+
         table.add(new Label("" + i0), 0, 0);
         table.add(new Label(" | "), 1, 0);
         table.add(new Label("" + i1), 2, 0);
