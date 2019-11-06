@@ -306,10 +306,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(null);
-//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
-//            File file = new File(classLoader.getResource("niedzkol.bmp").getFile());
+//            FileChooser fileChooser = new FileChooser(); //nocommit
+//            File file = fileChooser.showOpenDialog(null);
+            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+            File file = new File(classLoader.getResource("niedzkol.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
@@ -323,7 +323,7 @@ public class App extends Application {
 
     private MenuItem buildSmoothingMenuItem() {
         MenuItem smoothingItem = new MenuItem("Wygładzanie");
-        smoothingItem.setOnAction(e -> new Lab3().smoothing());
+        smoothingItem.setOnAction(e -> new Lab3(image).smoothing());
         return smoothingItem;
     }
 
