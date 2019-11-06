@@ -4,7 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -19,6 +18,8 @@ public class Lab3 {
         Label maskLabel = new Label("Maska ");
         container.add(maskLabel, 0, 0);
 
+        Mask mask1 = new Mask(0, 1, 2, 3, 4, 5, 6, 7, 8);
+        container.add(mask1.asTable(), 0, 1);
 
         Label previewLabel = new Label("Podgląd ");
         container.add(previewLabel, 0, 2);
