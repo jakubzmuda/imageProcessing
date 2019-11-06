@@ -6,16 +6,13 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -78,8 +75,9 @@ public class App extends Application {
         Menu fileMenu = buildFileMenuTab(imageView);
         Menu lab1Menu = buildLab1MenuTab();
         Menu lab2Menu = buildLab2MenuTab();
+        Menu lab3Menu = buildLab3MenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu);
         return menuBar;
     }
 
@@ -264,8 +262,14 @@ public class App extends Application {
         });
 
 
-
         menu.getItems().addAll(stretchImageItem, equalizeImageItem, negateImageItem, thresholdingItem, thresholdingWithPreservationItem, levelReductionItem, spreadingP1P2Item);
+        return menu;
+    }
+
+    private Menu buildLab3MenuTab() {
+        MenuItem smoothingItem = buildSmoothingMenuItem();
+        Menu menu = new Menu("Lab 3");
+        menu.getItems().addAll(smoothingItem);
         return menu;
     }
 
@@ -315,6 +319,12 @@ public class App extends Application {
             }
         });
         return openImageItem;
+    }
+
+    private MenuItem buildSmoothingMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Wygładzanie");
+        smoothingItem.setOnAction(e -> new Lab3().smoothing());
+        return smoothingItem;
     }
 
     private void printHistogram() {
