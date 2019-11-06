@@ -3,8 +3,8 @@ package app;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Lab3 {
@@ -16,13 +16,25 @@ public class Lab3 {
         GridPane container = new GridPane();
 
         Mask mask1 = new Mask(0, 1, 0, 1, 4, 1, 0, 1, 0);
-        container.add(mask1.asTable(), 0, 0);
+        Button chooseMask1Button = new Button("Wybierz");
+        VBox mask1Box = new VBox(mask1.asTable(), chooseMask1Button);
+        mask1Box.setAlignment(Pos.CENTER);
+        mask1Box.setStyle("-fx-padding: 16px;");
+        container.add(mask1Box, 0, 0);
 
         Mask mask2 = new Mask(1, 1, 1, 1, 1, 1, 1, 1, 1);
-        container.add(mask2.asTable(), 1, 0);
+        Button chooseMask2Button = new Button("Wybierz");
+        VBox mask2Box = new VBox(mask2.asTable(), chooseMask2Button);
+        mask2Box.setAlignment(Pos.CENTER);
+        mask2Box.setStyle("-fx-padding: 16px;");
+        container.add(mask2Box, 1, 0);
 
         Mask mask3 = new Mask(1, 2, 1, 2, 4, 2, 1, 2, 1);
-        container.add(mask3.asTable(), 2, 0);
+        Button chooseMask3Button = new Button("Wybierz");
+        VBox mask3Box = new VBox(mask3.asTable(), chooseMask3Button);
+        mask3Box.setAlignment(Pos.CENTER);
+        mask3Box.setStyle("-fx-padding: 16px;");
+        container.add(mask3Box, 2, 0);
 
         Scene scene = new Scene(container, 600, 600);
 
