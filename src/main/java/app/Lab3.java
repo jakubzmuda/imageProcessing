@@ -71,6 +71,10 @@ public class Lab3 {
 
         Mask mask2 = new Mask(1, 1, 1, 1, 1, 1, 1, 1, 1);
         Button chooseMask2Button = new Button("Wybierz");
+        chooseMask2Button.setOnAction(e -> {
+            Image newImage = new ImageOperations().smoothWithMask(image, mask2);
+            updateImageAndHistogram(newImage);
+        });
         VBox mask2Box = new VBox(mask2.asTable(), chooseMask2Button);
         mask2Box.setAlignment(Pos.CENTER);
         mask2Box.setStyle("-fx-padding: 16px;");
@@ -78,6 +82,10 @@ public class Lab3 {
         Mask mask3 = new Mask(1, 2, 1, 2, 4, 2, 1, 2, 1);
         Button chooseMask3Button = new Button("Wybierz");
         VBox mask3Box = new VBox(mask3.asTable(), chooseMask3Button);
+        chooseMask3Button.setOnAction(e -> {
+            Image newImage = new ImageOperations().smoothWithMask(image, mask3);
+            updateImageAndHistogram(newImage);
+        });
         mask3Box.setAlignment(Pos.CENTER);
         mask3Box.setStyle("-fx-padding: 16px;");
 
