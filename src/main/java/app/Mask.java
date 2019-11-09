@@ -58,4 +58,8 @@ public class Mask {
         table.add(new Label("---"), 3, rowIndex);
         table.add(new Label("--"), 4, rowIndex);
     }
+
+    public int sum() {
+        return i0  + i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8;
+    }
 }

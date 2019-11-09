@@ -74,6 +74,25 @@ public class ImageMap {
         });
     }
 
+    public void neighbourhoodOperation(Function3<Integer, Integer, Neighbourhood3x3, Canals> operator) {
+        map.forEach((x, value) -> {
+            value.forEach((y, canals) -> {
+                Neighbourhood3x3 neighbourhood = new Neighbourhood3x3(
+                        getCanalValueOrZero(x - 1, y - 1),
+                        getCanalValueOrZero(x, y - 1),
+                        getCanalValueOrZero(x + 1, y - 1),
+                        getCanalValueOrZero(x - 1, y),
+                        getCanalValueOrZero(x, y),
+                        getCanalValueOrZero(x + 1, y),
+                        getCanalValueOrZero(x - 1, y + 1),
+                        getCanalValueOrZero(x, y + 1),
+                        getCanalValueOrZero(x + 1, y + 1)
+                );
+                put(x, y, operator.apply(x, y, neighbourhood));
+            });
+        });
+    }
+
     public Histogram histogram() {
         int[] red = new int[256];
         int[] green = new int[256];
@@ -97,7 +116,11 @@ public class ImageMap {
         return new Histogram(red, green, blue);
     }
 
-    public float cumulativeDistributionForRedCanal(int canalColor) {
-        return 0; // todo
+    private Canals getCanalValueOrZero(int x, int y) {
+        if (x <= 0 || x >= width() || y <= 0 || y >= height()) {
+            return new Canals(0, 0, 0);
+        }
+        return map.get(x).get(y);
     }
+
 }

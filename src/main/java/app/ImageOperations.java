@@ -1,5 +1,6 @@
 package app;
 
+import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.Tuple3;
 import javafx.scene.image.Image;
@@ -98,14 +99,32 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
-    public Image smoothWithMask(Image image, Mask mask1) { // TODO
+    public Image smoothWithMask(Image image, Mask mask) {
         ImageMap imageMap = imageConverter.toImageMap(image);
-        imageMap.singlePointOperation((x, y, canals) -> {
-            int r = spreadRangeSingleColorCanal(canals.red, p1, p2, q1, q2);
-            int g = spreadRangeSingleColorCanal(canals.green, p1, p2, q1, q2);
-            int b = spreadRangeSingleColorCanal(canals.blue, p1, p2, q1, q2);
+        imageMap.neighbourhoodOperation((x, y, neighbourhood3x3) -> {
+            int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.red);
+            int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.green);
+            int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.blue);
             return new Canals(r, g, b);
         });
+
+        return imageConverter.toImage(imageMap);
+    }
+
+    private int smoothWithMaskSimpleCanal(Neighbourhood3x3 neighbourhood, Mask mask, Function1<Canals, Integer> colorRetriever) {
+        int i0 = colorRetriever.apply(neighbourhood.i0) * mask.i0;
+        int i1 = colorRetriever.apply(neighbourhood.i1) * mask.i1;
+        int i2 = colorRetriever.apply(neighbourhood.i2) * mask.i2;
+        int i3 = colorRetriever.apply(neighbourhood.i3) * mask.i3;
+        int i4 = colorRetriever.apply(neighbourhood.i4) * mask.i4;
+        int i5 = colorRetriever.apply(neighbourhood.i5) * mask.i5;
+        int i6 = colorRetriever.apply(neighbourhood.i6) * mask.i6;
+        int i7 = colorRetriever.apply(neighbourhood.i7) * mask.i7;
+        int i8 = colorRetriever.apply(neighbourhood.i8) * mask.i8;
+
+        int nominator = i0 + i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8;
+        int denominator = mask.sum();
+        return Math.round((float) nominator / denominator);
     }
 
     private int spreadRangeSingleColorCanal(int color, int p1, int p2, int q1, int q2) {
