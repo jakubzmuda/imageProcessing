@@ -98,6 +98,16 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
+    public Image smoothWithMask(Image image, Mask mask1) { // TODO
+        ImageMap imageMap = imageConverter.toImageMap(image);
+        imageMap.singlePointOperation((x, y, canals) -> {
+            int r = spreadRangeSingleColorCanal(canals.red, p1, p2, q1, q2);
+            int g = spreadRangeSingleColorCanal(canals.green, p1, p2, q1, q2);
+            int b = spreadRangeSingleColorCanal(canals.blue, p1, p2, q1, q2);
+            return new Canals(r, g, b);
+        });
+    }
+
     private int spreadRangeSingleColorCanal(int color, int p1, int p2, int q1, int q2) {
         float ratioP = (float) color / p2;
         float deltaQ = (float) q2 - q1;

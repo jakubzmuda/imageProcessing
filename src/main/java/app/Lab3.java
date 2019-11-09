@@ -36,7 +36,7 @@ public class Lab3 {
         Button doIt = new Button("Kontynuuj");
         doIt.setOnAction((event) -> {
             Image newImage = new ImageOperations().negate(image);
-            updateImage(newImage);
+            updateImageAndHistogram(newImage);
             stage.close();
         });
 
@@ -61,6 +61,10 @@ public class Lab3 {
     private HBox buildMasks() {
         Mask mask1 = new Mask(0, 1, 0, 1, 4, 1, 0, 1, 0);
         Button chooseMask1Button = new Button("Wybierz");
+        chooseMask1Button.setOnAction(e -> {
+            Image newImage = new ImageOperations().smoothWithMask(image, mask1);
+            updateImageAndHistogram(newImage);
+        });
         VBox mask1Box = new VBox(mask1.asTable(), chooseMask1Button);
         mask1Box.setAlignment(Pos.CENTER);
         mask1Box.setStyle("-fx-padding: 16px;");
@@ -80,9 +84,10 @@ public class Lab3 {
         return new HBox(mask1Box, mask2Box, mask3Box);
     }
 
-    private void updateImage(Image newImage) {
+    private void updateImageAndHistogram(Image newImage) {
         image = newImage;
         imageView.setImage(newImage);
+        buildHistogram();
     }
 
     private ScrollPane buildImageContainer(Pane imageView) {
