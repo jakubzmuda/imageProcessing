@@ -2,6 +2,7 @@ package app;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ public class Lab3 {
 
     private Image image;
     private ImageView imageView;
+    private BarChart<String, Number>  histogram;
 
     public Lab3(Image image) {
         this.image = image;
@@ -53,8 +55,7 @@ public class Lab3 {
         StackPane stackImageView = new StackPane(imageView);
         stackImageView.setAlignment(Pos.CENTER);
         ScrollPane imageContainer = buildImageContainer(stackImageView);
-
-        return new VBox(imageContainer);
+        return new VBox(imageContainer, buildHistogram());
     }
 
     private HBox buildMasks() {
@@ -91,5 +92,17 @@ public class Lab3 {
         imageContainer.setFitToHeight(true);
         imageContainer.setFitToWidth(true);
         return imageContainer;
+    }
+
+    private Pane buildHistogram() {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        this.histogram = histogramPainter.paintChart();
+        StackPane container = new StackPane(histogram);
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return container;
     }
 }
