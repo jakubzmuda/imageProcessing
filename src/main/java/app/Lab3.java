@@ -17,7 +17,7 @@ public class Lab3 {
 
     private Image image;
     private ImageView imageView;
-    private BarChart<String, Number>  histogram;
+    private StackPane histogramPane;
 
     public Lab3(Image image) {
         this.image = image;
@@ -55,7 +55,10 @@ public class Lab3 {
         StackPane stackImageView = new StackPane(imageView);
         stackImageView.setAlignment(Pos.CENTER);
         ScrollPane imageContainer = buildImageContainer(stackImageView);
-        return new VBox(imageContainer, buildHistogram());
+
+        this.histogramPane = new StackPane(buildHistogram());
+
+        return new VBox(imageContainer, histogramPane);
     }
 
     private HBox buildMasks() {
@@ -95,7 +98,8 @@ public class Lab3 {
     private void updateImageAndHistogram(Image newImage) {
         image = newImage;
         imageView.setImage(newImage);
-        buildHistogram();
+        this.histogramPane.getChildren().clear();
+        this.histogramPane.getChildren().add(buildHistogram());
     }
 
     private ScrollPane buildImageContainer(Pane imageView) {
@@ -107,15 +111,15 @@ public class Lab3 {
         return imageContainer;
     }
 
-    private Pane buildHistogram() {
+    private BarChart<String, Number> buildHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);
-        this.histogram = histogramPainter.paintChart();
-        StackPane container = new StackPane(histogram);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
         histogram.getData().addAll(
                 histogramPainter.getSeriesRed(),
                 histogramPainter.getSeriesGreen(),
                 histogramPainter.getSeriesBlue());
 
-        return container;
+        return histogram;
     }
 }
