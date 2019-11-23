@@ -76,8 +76,10 @@ public class App extends Application {
         Menu lab1Menu = buildLab1MenuTab();
         Menu lab2Menu = buildLab2MenuTab();
         Menu lab3Menu = buildLab3MenuTab();
+        Menu lab4Menu = buildLab4MenuTab();
+        Menu lab5Menu = buildLab5MenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu , lab4Menu, lab5Menu);
         return menuBar;
     }
 
@@ -270,6 +272,16 @@ public class App extends Application {
         MenuItem smoothingItem = buildSmoothingMenuItem();
         Menu menu = new Menu("Lab 3");
         menu.getItems().addAll(smoothingItem);
+        return menu;
+    }
+
+    private Menu buildLab4MenuTab() {
+        Menu menu = new Menu("Lab 4");
+        return menu;
+    }
+
+    private Menu buildLab5MenuTab() {
+        Menu menu = new Menu("Lab 5");
         return menu;
     }
 
