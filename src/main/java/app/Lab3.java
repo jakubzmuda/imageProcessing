@@ -16,14 +16,16 @@ import javafx.stage.Stage;
 
 public class Lab3 {
 
+    private final App app;
     private Image image;
     private ImageView imageView;
     private StackPane histogramPane;
     private Mask selectedMask;
     private BorderOperationStrategy selectedBorderOperationStrategy = BorderOperationStrategy.DUPLICATE;
 
-    public Lab3(Image image) {
+    public Lab3(Image image, App app) {
         this.image = image;
+        this.app = app;
     }
 
     public void smoothing() {
@@ -40,8 +42,9 @@ public class Lab3 {
 
         Button doIt = new Button("Kontynuuj");
         doIt.setOnAction((event) -> {
-            Image newImage = new ImageOperations().negate(image); // todo akcja ktora bierze maskę i strategię
+            Image newImage = new ImageOperations().smoothWithMask(image, selectedMask, selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
+            app.updateImage(newImage);
             stage.close();
         });
 
@@ -97,7 +100,7 @@ public class Lab3 {
         Mask mask1 = new Mask(0, 1, 0, 1, 4, 1, 0, 1, 0);
         Button chooseMask1Button = new Button("Wybierz");
         chooseMask1Button.setOnAction(e -> {
-            Image newImage = new ImageOperations().smoothWithMask(image, mask1);
+            Image newImage = new ImageOperations().smoothWithMask(image, mask1, this.selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
             this.selectedMask = mask1;
         });
@@ -108,7 +111,7 @@ public class Lab3 {
         Mask mask2 = new Mask(1, 1, 1, 1, 1, 1, 1, 1, 1);
         Button chooseMask2Button = new Button("Wybierz");
         chooseMask2Button.setOnAction(e -> {
-            Image newImage = new ImageOperations().smoothWithMask(image, mask2);
+            Image newImage = new ImageOperations().smoothWithMask(image, mask2, this.selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
             this.selectedMask = mask2;
         });
@@ -120,7 +123,7 @@ public class Lab3 {
         Button chooseMask3Button = new Button("Wybierz");
         VBox mask3Box = new VBox(mask3.asTable(), chooseMask3Button);
         chooseMask3Button.setOnAction(e -> {
-            Image newImage = new ImageOperations().smoothWithMask(image, mask3);
+            Image newImage = new ImageOperations().smoothWithMask(image, mask3, this.selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
             this.selectedMask = mask3;
         });
@@ -131,7 +134,7 @@ public class Lab3 {
         Button chooseMask4Button = new Button("Wybierz");
         VBox mask4Box = new VBox(mask4.asInteractiveTable(), chooseMask4Button);
         chooseMask3Button.setOnAction(e -> {
-            Image newImage = new ImageOperations().smoothWithMask(image, mask4);
+            Image newImage = new ImageOperations().smoothWithMask(image, mask4, this.selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
             this.selectedMask = mask4;
         });
@@ -142,7 +145,7 @@ public class Lab3 {
         Button chooseMask5Button = new Button("Wybierz");
         VBox mask5Box = new VBox(mask5.asInteractiveTable(), chooseMask5Button);
         chooseMask3Button.setOnAction(e -> {
-            Image newImage = new ImageOperations().smoothWithMask(image, mask5);
+            Image newImage = new ImageOperations().smoothWithMask(image, mask5, this.selectedBorderOperationStrategy);
             updateImageAndHistogram(newImage);
             this.selectedMask = mask5;
         });

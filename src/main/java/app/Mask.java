@@ -89,7 +89,6 @@ public class Mask {
         return table;
     }
 
-
     private void spacers(GridPane table, int rowIndex) {
         table.add(new Label("--"), 0, rowIndex);
         table.add(new Label("---"), 1, rowIndex);
@@ -99,6 +98,19 @@ public class Mask {
     }
 
     public int sum() {
-        return i0  + i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8;
+        return i0 + i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8;
+    }
+
+    public int sumForNonNull(Neighbourhood3x3 neighbourhood) {
+        return
+                (neighbourhood.i0 != null ? i0 : 0)
+                        + (neighbourhood.i1 != null ? i1 : 0)
+                        + (neighbourhood.i2 != null ? i2 : 0)
+                        + (neighbourhood.i3 != null ? i3 : 0)
+                        + (neighbourhood.i4 != null ? i4 : 0)
+                        + (neighbourhood.i5 != null ? i5 : 0)
+                        + (neighbourhood.i6 != null ? i6 : 0)
+                        + (neighbourhood.i7 != null ? i7 : 0)
+                        + (neighbourhood.i8 != null ? i8 : 0);
     }
 }

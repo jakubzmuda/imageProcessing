@@ -78,15 +78,15 @@ public class ImageMap {
         map.forEach((x, value) -> {
             value.forEach((y, canals) -> {
                 Neighbourhood3x3 neighbourhood = new Neighbourhood3x3(
-                        getCanalValueOrZero(x - 1, y - 1),
-                        getCanalValueOrZero(x, y - 1),
-                        getCanalValueOrZero(x + 1, y - 1),
-                        getCanalValueOrZero(x - 1, y),
-                        getCanalValueOrZero(x, y),
-                        getCanalValueOrZero(x + 1, y),
-                        getCanalValueOrZero(x - 1, y + 1),
-                        getCanalValueOrZero(x, y + 1),
-                        getCanalValueOrZero(x + 1, y + 1)
+                        getCanalValueOrNull(x - 1, y - 1),
+                        getCanalValueOrNull(x, y - 1),
+                        getCanalValueOrNull(x + 1, y - 1),
+                        getCanalValueOrNull(x - 1, y),
+                        getCanalValueOrNull(x, y),
+                        getCanalValueOrNull(x + 1, y),
+                        getCanalValueOrNull(x - 1, y + 1),
+                        getCanalValueOrNull(x, y + 1),
+                        getCanalValueOrNull(x + 1, y + 1)
                 );
                 put(x, y, operator.apply(x, y, neighbourhood));
             });
@@ -116,9 +116,9 @@ public class ImageMap {
         return new Histogram(red, green, blue);
     }
 
-    private Canals getCanalValueOrZero(int x, int y) {
+    private Canals getCanalValueOrNull(int x, int y) {
         if (x <= 0 || x >= width() || y <= 0 || y >= height()) {
-            return new Canals(0, 0, 0);
+            return null;
         }
         return map.get(x).get(y);
     }

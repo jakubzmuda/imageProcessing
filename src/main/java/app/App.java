@@ -285,7 +285,7 @@ public class App extends Application {
         return menu;
     }
 
-    private void updateImage(Image newImage) {
+    public void updateImage(Image newImage) {
         image = newImage;
         imageView.setImage(newImage);
     }
@@ -335,7 +335,7 @@ public class App extends Application {
 
     private MenuItem buildSmoothingMenuItem() {
         MenuItem smoothingItem = new MenuItem("Wygładzanie");
-        smoothingItem.setOnAction(e -> new Lab3(image).smoothing());
+        smoothingItem.setOnAction(e -> new Lab3(image, this).smoothing());
         return smoothingItem;
     }
 

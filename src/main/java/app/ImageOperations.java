@@ -99,31 +99,52 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
-    public Image smoothWithMask(Image image, Mask mask) {
+    public Image smoothWithMask(Image image, Mask mask, BorderOperationStrategy strategy) {
         ImageMap imageMap = imageConverter.toImageMap(image);
         imageMap.neighbourhoodOperation((x, y, neighbourhood3x3) -> {
-            int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.red);
-            int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.green);
-            int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, (Canals canals) -> canals.blue);
-            return new Canals(r, g, b);
+            if (strategy.equals(BorderOperationStrategy.NO_CHANGE)) {
+                if (!neighbourhood3x3.anyMissing()) {
+                    int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
+                    int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
+                    int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
+                    return new Canals(r, g, b);
+                }
+                return neighbourhood3x3.middle();
+            }
+            if (strategy.equals(BorderOperationStrategy.DUPLICATE)) {
+                Neighbourhood3x3 adjustedNeighbourhood = neighbourhood3x3.adjustBorderValues();
+                int r = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.red);
+                int g = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.green);
+                int b = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.blue);
+                return new Canals(r, g, b);
+            }
+            if (strategy.equals(BorderOperationStrategy.EXISTING_ONLY)) {
+                int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
+                int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
+                int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
+                return new Canals(r, g, b);
+            }
+            return neighbourhood3x3.middle();
         });
 
         return imageConverter.toImage(imageMap);
     }
 
-    private int smoothWithMaskSimpleCanal(Neighbourhood3x3 neighbourhood, Mask mask, Function1<Canals, Integer> colorRetriever) {
-        int i0 = colorRetriever.apply(neighbourhood.i0) * mask.i0;
-        int i1 = colorRetriever.apply(neighbourhood.i1) * mask.i1;
-        int i2 = colorRetriever.apply(neighbourhood.i2) * mask.i2;
-        int i3 = colorRetriever.apply(neighbourhood.i3) * mask.i3;
-        int i4 = colorRetriever.apply(neighbourhood.i4) * mask.i4;
-        int i5 = colorRetriever.apply(neighbourhood.i5) * mask.i5;
-        int i6 = colorRetriever.apply(neighbourhood.i6) * mask.i6;
-        int i7 = colorRetriever.apply(neighbourhood.i7) * mask.i7;
-        int i8 = colorRetriever.apply(neighbourhood.i8) * mask.i8;
+    private int smoothWithMaskSimpleCanal(Neighbourhood3x3 neighbourhood, Mask mask, BorderOperationStrategy strategy, Function1<Canals, Integer> colorRetriever) {
+        Neighbourhood3x3 nominatorNeighbourhood = strategy !=  BorderOperationStrategy.EXISTING_ONLY ? neighbourhood : neighbourhood.emptyToZero();
+
+        int i0 = colorRetriever.apply(nominatorNeighbourhood.i0) * mask.i0;
+        int i1 = colorRetriever.apply(nominatorNeighbourhood.i1) * mask.i1;
+        int i2 = colorRetriever.apply(nominatorNeighbourhood.i2) * mask.i2;
+        int i3 = colorRetriever.apply(nominatorNeighbourhood.i3) * mask.i3;
+        int i4 = colorRetriever.apply(nominatorNeighbourhood.i4) * mask.i4;
+        int i5 = colorRetriever.apply(nominatorNeighbourhood.i5) * mask.i5;
+        int i6 = colorRetriever.apply(nominatorNeighbourhood.i6) * mask.i6;
+        int i7 = colorRetriever.apply(nominatorNeighbourhood.i7) * mask.i7;
+        int i8 = colorRetriever.apply(nominatorNeighbourhood.i8) * mask.i8;
 
         int nominator = i0 + i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8;
-        int denominator = mask.sum();
+        int denominator = strategy != BorderOperationStrategy.EXISTING_ONLY ? mask.sum() : mask.sumForNonNull(neighbourhood);
         return Math.round((float) nominator / denominator);
     }
 
