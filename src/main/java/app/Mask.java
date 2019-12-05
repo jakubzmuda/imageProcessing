@@ -2,6 +2,7 @@ package app;
 
 
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -50,6 +51,44 @@ public class Mask {
 
         return table;
     }
+
+    public Pane asInteractiveTable() {
+        GridPane table = new GridPane();
+
+        table.setStyle("-fx-padding: 32px;");
+
+        table.add(new Label("" + i0), 0, 0);
+        table.add(new Label(" | "), 1, 0);
+        table.add(new Label("" + i1), 2, 0);
+        table.add(new Label(" | "), 3, 0);
+        table.add(new Label("" + i2), 4, 0);
+
+        spacers(table, 1);
+
+        table.add(new Label("" + i3), 0, 2);
+        table.add(new Label(" | "), 1, 2);
+
+        TextField interactiveField = new TextField("" + i4);
+        interactiveField.setMaxWidth(48);
+        interactiveField.setOnKeyReleased(event -> {
+            this.i4 = Integer.parseInt(interactiveField.getText());
+        });
+        table.add(interactiveField, 2, 2);
+
+        table.add(new Label(" | "), 3, 2);
+        table.add(new Label("" + i5), 4, 2);
+
+        spacers(table, 3);
+
+        table.add(new Label("" + i6), 0, 4);
+        table.add(new Label(" | "), 1, 4);
+        table.add(new Label("" + i7), 2, 4);
+        table.add(new Label(" | "), 3, 4);
+        table.add(new Label("" + i8), 4, 4);
+
+        return table;
+    }
+
 
     private void spacers(GridPane table, int rowIndex) {
         table.add(new Label("--"), 0, rowIndex);
