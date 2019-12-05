@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,6 +19,8 @@ public class Lab3 {
     private Image image;
     private ImageView imageView;
     private StackPane histogramPane;
+    private Mask selectedMask;
+    private BorderOperationStrategy selectedBorderOperationStrategy = BorderOperationStrategy.DUPLICATE;
 
     public Lab3(Image image) {
         this.image = image;
@@ -28,14 +31,16 @@ public class Lab3 {
         stage.setTitle("Wygładzanie");
 
         VBox masks = buildMasks();
+        VBox strategy = buildStrategy();
+        VBox leftSideContainer = new VBox(masks, strategy);
         VBox preview = buildPreview();
-        HBox content = new HBox(masks, preview);
+        HBox content = new HBox(leftSideContainer, preview);
         content.setSpacing(16);
         content.setAlignment(Pos.CENTER);
 
         Button doIt = new Button("Kontynuuj");
         doIt.setOnAction((event) -> {
-            Image newImage = new ImageOperations().negate(image);
+            Image newImage = new ImageOperations().negate(image); // todo akcja ktora bierze maskę i strategię
             updateImageAndHistogram(newImage);
             stage.close();
         });
@@ -48,6 +53,33 @@ public class Lab3 {
         container.setSpacing(16);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private VBox buildStrategy() {
+        Label strategyLabel = new Label("Strategia: ");
+        Label selectedStrategyLabel = new Label(this.selectedBorderOperationStrategy.description());
+        HBox header = new HBox(strategyLabel, selectedStrategyLabel);
+        Button button1 = new Button(BorderOperationStrategy.DUPLICATE.description());
+        button1.setOnAction(event -> {
+            BorderOperationStrategy strategy = BorderOperationStrategy.DUPLICATE;
+            this.selectedBorderOperationStrategy = strategy;
+            selectedStrategyLabel.setText(strategy.description());
+        });
+
+        Button button2 = new Button(BorderOperationStrategy.EXISTING_ONLY.description());
+        button2.setOnAction(event -> {
+            BorderOperationStrategy strategy = BorderOperationStrategy.EXISTING_ONLY;
+            this.selectedBorderOperationStrategy = strategy;
+            selectedStrategyLabel.setText(strategy.description());
+        });
+
+        Button button3 = new Button(BorderOperationStrategy.NO_CHANGE.description());
+        button3.setOnAction(event -> {
+            BorderOperationStrategy strategy = BorderOperationStrategy.NO_CHANGE;
+            this.selectedBorderOperationStrategy = strategy;
+            selectedStrategyLabel.setText(strategy.description());
+        });
+        return new VBox(header, button1, button2, button3);
     }
 
     private VBox buildPreview() {
@@ -67,6 +99,7 @@ public class Lab3 {
         chooseMask1Button.setOnAction(e -> {
             Image newImage = new ImageOperations().smoothWithMask(image, mask1);
             updateImageAndHistogram(newImage);
+            this.selectedMask = mask1;
         });
         VBox mask1Box = new VBox(mask1.asTable(), chooseMask1Button);
         mask1Box.setAlignment(Pos.CENTER);
@@ -77,6 +110,7 @@ public class Lab3 {
         chooseMask2Button.setOnAction(e -> {
             Image newImage = new ImageOperations().smoothWithMask(image, mask2);
             updateImageAndHistogram(newImage);
+            this.selectedMask = mask2;
         });
         VBox mask2Box = new VBox(mask2.asTable(), chooseMask2Button);
         mask2Box.setAlignment(Pos.CENTER);
@@ -88,6 +122,7 @@ public class Lab3 {
         chooseMask3Button.setOnAction(e -> {
             Image newImage = new ImageOperations().smoothWithMask(image, mask3);
             updateImageAndHistogram(newImage);
+            this.selectedMask = mask3;
         });
         mask3Box.setAlignment(Pos.CENTER);
         mask3Box.setStyle("-fx-padding: 16px;");
@@ -98,6 +133,7 @@ public class Lab3 {
         chooseMask3Button.setOnAction(e -> {
             Image newImage = new ImageOperations().smoothWithMask(image, mask4);
             updateImageAndHistogram(newImage);
+            this.selectedMask = mask4;
         });
         mask4Box.setAlignment(Pos.CENTER);
         mask4Box.setStyle("-fx-padding: 16px;");
@@ -108,6 +144,7 @@ public class Lab3 {
         chooseMask3Button.setOnAction(e -> {
             Image newImage = new ImageOperations().smoothWithMask(image, mask5);
             updateImageAndHistogram(newImage);
+            this.selectedMask = mask5;
         });
         mask5Box.setAlignment(Pos.CENTER);
         mask5Box.setStyle("-fx-padding: 16px;");
