@@ -19,6 +19,9 @@ public class Lab3 {
     private ImageView imageView;
     private StackPane histogramPane;
 
+    Mask smoothingMask4 = new Mask(1, 1, 1, 1, 1, 1, 1, 1, 1);
+    Mask smoothingMask5 = new Mask(0, 1, 0, 1, 1, 1, 0, 1, 0);
+
     public Lab3(Image image) {
         this.image = image;
     }
@@ -27,7 +30,7 @@ public class Lab3 {
         Stage stage = new Stage();
         stage.setTitle("Wygładzanie");
 
-        HBox masks = buildMasks();
+        VBox masks = buildMasks();
         VBox preview = buildPreview();
         HBox content = new HBox(masks, preview);
         content.setSpacing(16);
@@ -61,7 +64,7 @@ public class Lab3 {
         return new VBox(imageContainer, histogramPane);
     }
 
-    private HBox buildMasks() {
+    private VBox buildMasks() {
         Mask mask1 = new Mask(0, 1, 0, 1, 4, 1, 0, 1, 0);
         Button chooseMask1Button = new Button("Wybierz");
         chooseMask1Button.setOnAction(e -> {
@@ -92,7 +95,27 @@ public class Lab3 {
         mask3Box.setAlignment(Pos.CENTER);
         mask3Box.setStyle("-fx-padding: 16px;");
 
-        return new HBox(mask1Box, mask2Box, mask3Box);
+        Button chooseMask4Button = new Button("Wybierz");
+        VBox mask4Box = new VBox(smoothingMask4.asTable(), chooseMask4Button);
+        chooseMask3Button.setOnAction(e -> {
+            Image newImage = new ImageOperations().smoothWithMask(image, smoothingMask4);
+            updateImageAndHistogram(newImage);
+        });
+        mask4Box.setAlignment(Pos.CENTER);
+        mask4Box.setStyle("-fx-padding: 16px;");
+
+        Button chooseMask5Button = new Button("Wybierz");
+        VBox mask5Box = new VBox(smoothingMask5.asTable(), chooseMask5Button);
+        chooseMask3Button.setOnAction(e -> {
+            Image newImage = new ImageOperations().smoothWithMask(image, smoothingMask5);
+            updateImageAndHistogram(newImage);
+        });
+        mask5Box.setAlignment(Pos.CENTER);
+        mask5Box.setStyle("-fx-padding: 16px;");
+
+        HBox hBox1 = new HBox(mask1Box, mask2Box, mask3Box);
+        HBox hBox2 = new HBox(mask4Box, mask5Box);
+        return new VBox(hBox1, hBox2);
     }
 
     private void updateImageAndHistogram(Image newImage) {
