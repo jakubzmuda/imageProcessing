@@ -22,6 +22,7 @@ public class Lab3 {
     private StackPane histogramPane;
     private Mask selectedMask;
     private BorderOperationStrategy selectedBorderOperationStrategy = BorderOperationStrategy.DUPLICATE;
+    private ScalingStrategy selectedScalingStrategy = ScalingStrategy.PROPORTIONAL;
 
     public Lab3(Image image, App app) {
         this.image = image;
@@ -64,7 +65,10 @@ public class Lab3 {
 
         VBox masks = buildMasksForSharpening();
         VBox strategy = buildStrategy();
-        VBox leftSideContainer = new VBox(masks, strategy);
+        VBox scaling = buildScaling();
+        VBox vBox = new VBox(masks, strategy, scaling);
+        vBox.setSpacing(16);
+        VBox leftSideContainer = vBox;
         VBox preview = buildPreview();
         HBox content = new HBox(leftSideContainer, preview);
         content.setSpacing(16);
@@ -111,6 +115,33 @@ public class Lab3 {
             BorderOperationStrategy strategy = BorderOperationStrategy.NO_CHANGE;
             this.selectedBorderOperationStrategy = strategy;
             selectedStrategyLabel.setText(strategy.description());
+        });
+        return new VBox(header, button1, button2, button3);
+    }
+
+    private VBox buildScaling() {
+        Label scalingLabel = new Label("Metoda skalowania: ");
+        Label selectedScalingLabel = new Label(this.selectedBorderOperationStrategy.description());
+        HBox header = new HBox(scalingLabel, selectedScalingLabel);
+        Button button1 = new Button(ScalingStrategy.PROPORTIONAL.description());
+        button1.setOnAction(event -> {
+            ScalingStrategy strategy = ScalingStrategy.PROPORTIONAL;
+            this.selectedScalingStrategy = strategy;
+            selectedScalingLabel.setText(strategy.description());
+        });
+
+        Button button2 = new Button(ScalingStrategy.TRI_VALUE.description());
+        button2.setOnAction(event -> {
+            ScalingStrategy strategy = ScalingStrategy.TRI_VALUE;
+            this.selectedScalingStrategy = strategy;
+            selectedScalingLabel.setText(strategy.description());
+        });
+
+        Button button3 = new Button(ScalingStrategy.CUTTING.description());
+        button3.setOnAction(event -> {
+            ScalingStrategy strategy = ScalingStrategy.CUTTING;
+            this.selectedScalingStrategy = strategy;
+            selectedScalingLabel.setText(strategy.description());
         });
         return new VBox(header, button1, button2, button3);
     }
