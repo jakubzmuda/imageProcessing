@@ -99,29 +99,29 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
-    public Image smoothWithMask(Image image, Mask mask, BorderOperationStrategy strategy) {
+    public Image applyMask(Image image, Mask mask, BorderOperationStrategy strategy) {
         ImageMap imageMap = imageConverter.toImageMap(image);
         imageMap.neighbourhoodOperation((x, y, neighbourhood3x3) -> {
             if (strategy.equals(BorderOperationStrategy.NO_CHANGE)) {
                 if (!neighbourhood3x3.anyMissing()) {
-                    int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
-                    int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
-                    int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
+                    int r = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
+                    int g = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
+                    int b = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
                     return new Canals(r, g, b);
                 }
                 return neighbourhood3x3.middle();
             }
             if (strategy.equals(BorderOperationStrategy.DUPLICATE)) {
                 Neighbourhood3x3 adjustedNeighbourhood = neighbourhood3x3.adjustBorderValues();
-                int r = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.red);
-                int g = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.green);
-                int b = smoothWithMaskSimpleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.blue);
+                int r = applyMaskSingleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.red);
+                int g = applyMaskSingleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.green);
+                int b = applyMaskSingleCanal(adjustedNeighbourhood, mask, strategy, (Canals canals) -> canals.blue);
                 return new Canals(r, g, b);
             }
             if (strategy.equals(BorderOperationStrategy.EXISTING_ONLY)) {
-                int r = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
-                int g = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
-                int b = smoothWithMaskSimpleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
+                int r = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.red);
+                int g = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.green);
+                int b = applyMaskSingleCanal(neighbourhood3x3, mask, strategy, (Canals canals) -> canals.blue);
                 return new Canals(r, g, b);
             }
             return neighbourhood3x3.middle();
@@ -130,7 +130,7 @@ public class ImageOperations {
         return imageConverter.toImage(imageMap);
     }
 
-    private int smoothWithMaskSimpleCanal(Neighbourhood3x3 neighbourhood, Mask mask, BorderOperationStrategy strategy, Function1<Canals, Integer> colorRetriever) {
+    private int applyMaskSingleCanal(Neighbourhood3x3 neighbourhood, Mask mask, BorderOperationStrategy strategy, Function1<Canals, Integer> colorRetriever) {
         Neighbourhood3x3 nominatorNeighbourhood = strategy !=  BorderOperationStrategy.EXISTING_ONLY ? neighbourhood : neighbourhood.emptyToZero();
 
         int i0 = colorRetriever.apply(nominatorNeighbourhood.i0) * mask.i0;

@@ -22,6 +22,21 @@ public class Mask {
         this.i8 = i8;
     }
 
+    @Override
+    public String toString() {
+        return "Mask{" +
+                "i0=" + i0 +
+                ", i1=" + i1 +
+                ", i2=" + i2 +
+                ", i3=" + i3 +
+                ", i4=" + i4 +
+                ", i5=" + i5 +
+                ", i6=" + i6 +
+                ", i7=" + i7 +
+                ", i8=" + i8 +
+                '}';
+    }
+
     public Pane asTable() {
         GridPane table = new GridPane();
 
