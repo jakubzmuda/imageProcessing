@@ -117,7 +117,7 @@ public class ImageMap {
     }
 
     private Canals getCanalValueOrNull(int x, int y) {
-        if (x <= 0 || x >= width() || y <= 0 || y >= height()) {
+        if (x < 0 || x >= width() || y < 0 || y >= height()) {
             return null;
         }
         return map.get(x).get(y);
