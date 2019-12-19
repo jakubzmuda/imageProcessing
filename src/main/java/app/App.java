@@ -79,7 +79,7 @@ public class App extends Application {
         Menu lab4Menu = buildLab4MenuTab();
         Menu lab5Menu = buildLab5MenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu , lab4Menu, lab5Menu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu, lab4Menu, lab5Menu);
         return menuBar;
     }
 
@@ -283,6 +283,9 @@ public class App extends Application {
 
     private Menu buildLab5MenuTab() {
         Menu menu = new Menu("Lab 5");
+        MenuItem segmentationSplitAndMerge = buildSegmentationSplitAndMerge();
+        MenuItem segmentationGrow = buildSegmentationGrow();
+        menu.getItems().addAll(segmentationSplitAndMerge, segmentationGrow);
         return menu;
     }
 
@@ -345,6 +348,19 @@ public class App extends Application {
         smoothingItem.setOnAction(e -> new Lab3(image, this).sharpening());
         return smoothingItem;
     }
+
+    private MenuItem buildSegmentationSplitAndMerge() {
+        MenuItem item = new MenuItem("Segmentacja: dziel i łącz");
+        item.setOnAction(e -> new Lab5(image, this).segmentationSplitAndMerge());
+        return item;
+    }
+
+    private MenuItem buildSegmentationGrow() {
+        MenuItem smoothingItem = new MenuItem("Segmentacja: rozrost");
+        smoothingItem.setOnAction(e -> new Lab5(image, this).segmentationGrow());
+        return smoothingItem;
+    }
+
 
     private void printHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);
