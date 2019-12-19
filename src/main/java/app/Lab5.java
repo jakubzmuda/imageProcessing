@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -17,12 +18,16 @@ public class Lab5 {
     private final Image image;
     private final App app;
 
-    ImageView inputImageView;
+    private ImageView inputImageView;
+    private ImageView outputImageView;
+    private Image outputImage;
 
-    public Lab5(Image image, App app) {
-        this.image = image;
+    public Lab5(Image inputImage, App app) {
+        this.image = inputImage;
         this.app = app;
-        this.inputImageView = new ImageView(image);
+        this.inputImageView = new ImageView(inputImage);
+        this.outputImage = new ImageOperations().segmentationSplitAndMerge(inputImage);
+        this.outputImageView = new ImageView(outputImage);
     }
 
     public void segmentationGrow() {
@@ -33,9 +38,18 @@ public class Lab5 {
         Stage stage = new Stage();
         stage.setTitle("Segmentacja: Dziel i łącz");
 
-        HBox inputImage = buildInputImageBox();
+        HBox inputBox = buildInputImageBox();
+        HBox outputBox = buildOutputImageBox();
 
-        VBox container = new VBox(inputImage);
+
+        Button doIt = new Button("Kontynuuj");
+        doIt.setOnAction((event) -> {
+            app.updateImage(outputImage);
+            stage.close();
+        });
+
+        VBox container = new VBox(inputBox, outputBox, doIt);
+        container.setSpacing(32);
 
         Scene scene = new Scene(container, 1200, 1000);
 
@@ -52,6 +66,14 @@ public class Lab5 {
         box.setSpacing(16);
         return box;
     }
+
+    private HBox buildOutputImageBox() {
+        HBox box = new HBox(new Label("Obraz wynikowy"), buildImageContainer(this.outputImageView), buildHistogram(outputImage));
+        box.setAlignment(Pos.CENTER);
+        box.setSpacing(16);
+        return box;
+    }
+
 
     private StackPane buildImageContainer(ImageView imageView) {
         int size = 300;

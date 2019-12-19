@@ -199,4 +199,8 @@ public class ImageOperations {
 
         return Tuple.of(r, g, b);
     }
+
+    public Image segmentationSplitAndMerge(Image inputImage) {
+        return inputImage;
+    }
 }
