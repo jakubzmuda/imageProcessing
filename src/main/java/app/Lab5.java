@@ -2,6 +2,7 @@ package app;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -24,6 +25,10 @@ public class Lab5 {
         this.inputImageView = new ImageView(image);
     }
 
+    public void segmentationGrow() {
+
+    }
+
     public void segmentationSplitAndMerge() {
         Stage stage = new Stage();
         stage.setTitle("Segmentacja: Dziel i łącz");
@@ -42,7 +47,7 @@ public class Lab5 {
 
 
     private HBox buildInputImageBox() {
-        HBox box = new HBox(new Label("Obraz wejściowy"), buildImageContainer(this.inputImageView));
+        HBox box = new HBox(new Label("Obraz wejściowy"), buildImageContainer(this.inputImageView), buildHistogram(image));
         box.setAlignment(Pos.CENTER);
         box.setSpacing(16);
         return box;
@@ -64,7 +69,18 @@ public class Lab5 {
         return stackImageView;
     }
 
-    public void segmentationGrow() {
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
 
+        histogram.setMaxWidth(300);
+        histogram.setMaxHeight(300);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 }
