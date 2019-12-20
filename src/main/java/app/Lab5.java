@@ -74,19 +74,14 @@ public class Lab5 {
         return box;
     }
 
-
     private StackPane buildImageContainer(ImageView imageView) {
-        int size = 300;
-        imageView.setFitHeight(size);
-        imageView.setFitWidth(size);
+        int height = 300;
+        imageView.setFitHeight(height);
         StackPane stackImageView = new StackPane(imageView);
         ScrollPane imageContainer = new ScrollPane(imageView);
-        imageContainer.setPrefWidth(size);
-        imageContainer.setMaxWidth(size);
-        imageContainer.setPrefHeight(size);
-        imageContainer.setMaxHeight(size);
+        imageContainer.setPrefHeight(height);
+        imageContainer.setMaxHeight(height);
         imageContainer.setFitToHeight(true);
-        imageContainer.setFitToWidth(true);
         stackImageView.setAlignment(Pos.CENTER);
         return stackImageView;
     }

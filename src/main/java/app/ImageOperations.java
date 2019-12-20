@@ -203,16 +203,16 @@ public class ImageOperations {
 
     public Image segmentationSplitAndMerge(Image inputImage) {
         ImageMap imageMap = new ImageConverter().toImageMap(inputImage);
-        int threshold = 50;
+        int threshold = 252;
 
         List<Region> regions = new Region(imageMap).split();
+        int step = 1;
         while (regions.filter(region -> !region.isHomogeneous(threshold)).size() > 0) {
             regions = splitEpochIfNotHomogeneous(regions, threshold);
-            System.out.println("splitting, number of new regions " + regions.size());
+            System.out.println("number of regions after step " + step++ + ": " + regions.size());
         }
 
         //todo tutaj trzeba zebrać te regiony i narysować mapę
-        System.out.println("ok");
 
         return inputImage;
     }

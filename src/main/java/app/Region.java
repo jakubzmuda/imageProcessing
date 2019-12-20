@@ -43,6 +43,11 @@ public class Region {
     }
 
     public boolean isHomogeneous(int threshold) {
+
+        if(size() <= 4) {
+            return true;
+        }
+
         int currentMax = Integer.MIN_VALUE;
         int currentMin = Integer.MAX_VALUE;
         for (int x = 0; x <= xEnd; x++) {
