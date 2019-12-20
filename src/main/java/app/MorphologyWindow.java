@@ -125,9 +125,6 @@ public class MorphologyWindow {
             stage.close();
         });
 
-        VBox radioAndKSliderVBox = new VBox(operationVBox);
-        radioAndKSliderVBox.setSpacing(15);
-        radioAndKSliderVBox.setAlignment(Pos.CENTER);
         HBox buttonsHbox = new HBox(save);
         buttonsHbox.setAlignment(Pos.CENTER);
         buttonsHbox.setSpacing(15);
