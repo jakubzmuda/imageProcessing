@@ -320,6 +320,7 @@ public class MorphologyWindow {
         after = applyOperation();
         afterImageView.setImage(after);
         this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     /**
