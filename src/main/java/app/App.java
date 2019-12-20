@@ -13,8 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import nu.pattern.OpenCV;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -36,6 +36,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        OpenCV.loadLocally();
         VBox vBox = buildMainBox();
         primaryStage.setTitle("Image processing");
         primaryStage.setScene(new Scene(vBox, appWidth, appHeight));
@@ -278,6 +279,8 @@ public class App extends Application {
 
     private Menu buildLab4MenuTab() {
         Menu menu = new Menu("Lab 4");
+        MenuItem menuItem = buildMorphologyMenuItem();
+        menu.getItems().addAll(menuItem);
         return menu;
     }
 
@@ -361,6 +364,11 @@ public class App extends Application {
         return smoothingItem;
     }
 
+    private MenuItem buildMorphologyMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Operacje morfologiczne");
+        smoothingItem.setOnAction(e -> new MorphologyWindow(image, this));
+        return smoothingItem;
+    }
 
     private void printHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);
