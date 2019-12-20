@@ -14,8 +14,6 @@ import javafx.stage.Stage;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
-import static javafx.geometry.Orientation.VERTICAL;
-
 /**
  * Reprezentuje okno operacji morfologicznych.
  */
@@ -134,14 +132,10 @@ public class MorphologyWindow {
 
         VBox borderVBox = createBorderOptions();
 
-        HBox buttons = new HBox(operationVBox,
-                new Separator(VERTICAL), shapeVBox,
-                new Separator(VERTICAL), borderVBox,
-                new Separator(VERTICAL), buttonsTimesVbox);
+        VBox buttons = new VBox(operationVBox, shapeVBox, borderVBox, buttonsTimesVbox);
         buttons.setPadding(new Insets(13, 10, 10, 0));
         buttons.setSpacing(15);
-        buttons.setMaxHeight(OPTIONS_HEIGHT);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.setAlignment(Pos.CENTER);
         vBox = new VBox(hBox, buttons);
 
         Scene scene = createScene(beforeImageViewHbox, afterImageViewHbox);
@@ -164,8 +158,7 @@ public class MorphologyWindow {
      */
     private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        double windowHeight = afterImageView.getBoundsInLocal().getHeight() + OPTIONS_HEIGHT;
-        Scene scene = new Scene(vBox, windowWidth, windowHeight);
+        Scene scene = new Scene(vBox, windowWidth, 800);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
