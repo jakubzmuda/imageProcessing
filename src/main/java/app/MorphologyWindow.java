@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,6 +51,7 @@ public class MorphologyWindow {
      */
     private ImageView beforeImageView;
     private ImageView afterImageView;
+    private VBox afterImageViewHbox;
 
     /**
      * Elementy okna.
@@ -63,6 +65,8 @@ public class MorphologyWindow {
      */
     private Image before;
     private Image after;
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
 
     /**
      * Wartość zwielokrotnienia operacji.
@@ -110,9 +114,13 @@ public class MorphologyWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
@@ -156,7 +164,7 @@ public class MorphologyWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
         Scene scene = new Scene(vBox, windowWidth, 800);
         scene.setOnKeyPressed(event -> {
@@ -311,6 +319,7 @@ public class MorphologyWindow {
     private void reloadPreview() {
         after = applyOperation();
         afterImageView.setImage(after);
+        this.afterImageHistogram = buildHistogram(after);
     }
 
     /**
@@ -339,6 +348,21 @@ public class MorphologyWindow {
         }
 
         return ImageUtils.mat2Image(image);
+    }
+
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
+        histogram.setMaxWidth(300);
+        histogram.setMaxHeight(300);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 
 }
