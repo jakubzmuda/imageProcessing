@@ -6,6 +6,7 @@ import io.vavr.Tuple3;
 import io.vavr.collection.List;
 import javafx.scene.image.Image;
 
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ImageOperations {
@@ -201,33 +202,33 @@ public class ImageOperations {
         return Tuple.of(r, g, b);
     }
 
-    public Image segmentationSplitAndMerge(Image inputImage) {
+    public java.util.List<Epoch> segmentationSplitAndMerge(Image inputImage) {
         ImageMap imageMap = new ImageConverter().toImageMap(inputImage);
-        int threshold = 252;
+        int threshold = 20;
 
-        List<Region> regions = new Region(imageMap).split();
+        java.util.List<Epoch> epochs = new java.util.ArrayList<>();
+        epochs.add(new Epoch(new Region(imageMap).split()));
         int step = 1;
-        while (regions.filter(region -> !region.isHomogeneous(threshold)).size() > 0) {
-            regions = splitEpochIfNotHomogeneous(regions, threshold);
-            System.out.println("number of regions after step " + step++ + ": " + regions.size());
+        while (epochs.get(epochs.size() - 1).regions().stream().anyMatch(region -> !region.isHomogeneous(threshold))) {
+            java.util.List<Region> newRegions = splitEpochIfNotHomogeneous(epochs.get(epochs.size() - 1).regions(), threshold);
+            epochs.add(new Epoch(newRegions));
+            System.out.println("number of regions after step " + step++ + ": " + newRegions.size());
         }
 
-        //todo tutaj trzeba zebrać te regiony i narysować mapę
-
-        return inputImage;
+        return epochs;
     }
 
-    private List<Region> splitEpochIfNotHomogeneous(List<Region> regions, int threshold) {
+    private java.util.List<Region> splitEpochIfNotHomogeneous(java.util.List<Region> regions, int threshold) {
         java.util.List<Region> output = new java.util.ArrayList<>();
 
         for (Region region : regions) {
             if (!region.isHomogeneous(threshold)) {
-                output.addAll(region.split().asJava());
+                output.addAll(region.split());
             } else {
                 output.add(region);
             }
         }
 
-        return List.ofAll(output);
+        return output;
     }
 }

@@ -13,6 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class Lab5 {
 
     private final Image image;
@@ -20,13 +22,15 @@ public class Lab5 {
 
     private ImageView inputImageView;
     private ImageView outputImageView;
+    private List<Epoch> epochs;
     private Image outputImage;
 
     public Lab5(Image inputImage, App app) {
         this.image = inputImage;
         this.app = app;
         this.inputImageView = new ImageView(inputImage);
-        this.outputImage = new ImageOperations().segmentationSplitAndMerge(inputImage);
+        this.epochs = new ImageOperations().segmentationSplitAndMerge(inputImage);
+        this.outputImage = inputImage; // TODO later change
         this.outputImageView = new ImageView(outputImage);
     }
 

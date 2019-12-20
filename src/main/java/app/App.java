@@ -325,7 +325,7 @@ public class App extends Application {
 //            FileChooser fileChooser = new FileChooser(); //nocommit
 //            File file = fileChooser.showOpenDialog(null);
             ClassLoader classLoader = getClass().getClassLoader(); // fast load
-            File file = new File(classLoader.getResource("kitty.bmp").getFile());
+            File file = new File(classLoader.getResource("blackAndWhite.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);

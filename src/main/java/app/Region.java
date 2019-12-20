@@ -1,6 +1,7 @@
 package app;
 
-import io.vavr.collection.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Region {
 
@@ -39,7 +40,12 @@ public class Region {
         Region thirdSquare = new Region(imageMap, xStart, xBreakingPoint, yBreakingPoint + 1, yEnd);
         Region fourthSquare = new Region(imageMap, xBreakingPoint + 1, xEnd, yBreakingPoint + 1, yEnd);
 
-        return List.of(firstSquare, secondSquare, thirdSquare, fourthSquare);
+        ArrayList<Region> output = new ArrayList<>();
+        output.add(firstSquare);
+        output.add(secondSquare);
+        output.add(thirdSquare);
+        output.add(fourthSquare);
+        return output;
     }
 
     public boolean isHomogeneous(int threshold) {
@@ -59,5 +65,25 @@ public class Region {
         }
 
         return Math.abs(currentMax - currentMin) <= threshold;
+    }
+
+    public ImageMap map() {
+        return this.imageMap;
+    }
+
+    public int xStart() {
+        return xStart;
+    }
+
+    public int xEnd() {
+        return xEnd;
+    }
+
+    public int yStart() {
+        return yStart;
+    }
+
+    public int yEnd() {
+        return yEnd;
     }
 }

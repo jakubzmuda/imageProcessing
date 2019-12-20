@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
 import java.awt.image.BufferedImage;
-import java.util.Map;
 
 public class ImageConverter {
 
