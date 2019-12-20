@@ -59,7 +59,6 @@ public class MorphologyWindow {
     private Stage stage;
     private VBox vBox;
     private HBox hBox;
-    private Slider slider;
 
     /**
      * Obrazy przed i po operacji.
@@ -110,7 +109,6 @@ public class MorphologyWindow {
         currentBorderType = Core.BORDER_REPLICATE;
         border = new Scalar(0, 0, 0, 255);
 
-        HBox kSliderHbox = createSliderHBox();
         createBeforeImageView();
         createAfterImageView();
 
@@ -121,38 +119,19 @@ public class MorphologyWindow {
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
 
-        Button cancel = new Button("Odrzuć");
-        cancel.setOnAction(event -> {
-            stage.close();
-        });
-        Button save = new Button("Zachowaj");
+        Button save = new Button("Kontynuuj");
         save.setOnAction(event -> {
             app.updateImage(after);
             stage.close();
         });
 
-        Slider timesSlider = new Slider(1, 32, 1);
-        timesSlider.setPrefWidth(100);
-        Label timesValue = new Label("1x");
-        timesValue.setPrefWidth(30);
-        timesSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            timesValue.setText(newValue.intValue() + "x");
-            times = newValue.intValue();
-            reloadPreview();
-        });
-
-        VBox parametrizedSlider = new VBox(kSliderHbox);
-        parametrizedSlider.setSpacing(5);
-        parametrizedSlider.setAlignment(Pos.CENTER);
-
         VBox radioAndKSliderVBox = new VBox(operationVBox);
         radioAndKSliderVBox.setSpacing(15);
         radioAndKSliderVBox.setAlignment(Pos.CENTER);
-        HBox buttonsHbox = new HBox(cancel, save);
+        HBox buttonsHbox = new HBox(save);
         buttonsHbox.setAlignment(Pos.CENTER);
         buttonsHbox.setSpacing(15);
-        HBox timesSliderHBox = new HBox(timesSlider, timesValue);
-        VBox buttonsTimesVbox = new VBox(timesSliderHBox, buttonsHbox);
+        VBox buttonsTimesVbox = new VBox(buttonsHbox);
         buttonsTimesVbox.setAlignment(Pos.CENTER);
         buttonsTimesVbox.setSpacing(15);
 
@@ -160,7 +139,6 @@ public class MorphologyWindow {
 
         HBox buttons = new HBox(operationVBox,
                 new Separator(VERTICAL), shapeVBox,
-                new Separator(VERTICAL), kSliderHbox,
                 new Separator(VERTICAL), borderVBox,
                 new Separator(VERTICAL), buttonsTimesVbox);
         buttons.setPadding(new Insets(13, 10, 10, 0));
@@ -175,7 +153,7 @@ public class MorphologyWindow {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         stage.setScene(scene);
-        stage.setTitle("Wygładzanie");
+        stage.setTitle("Operacje morfologiczne");
         save.requestFocus();
         stage.showAndWait();
     }
@@ -289,20 +267,6 @@ public class MorphologyWindow {
     }
 
     /**
-     * Tworzy obszar ze Sliderem do wyboru parametru k w masce parametryzowanej.
-     *
-     * @return obszar ze Sliderem
-     */
-    private HBox createSliderHBox() {
-        createSlider();
-
-        HBox sliderHbox = new HBox(slider);
-        sliderHbox.setAlignment(Pos.CENTER);
-        sliderHbox.setSpacing(5);
-        return sliderHbox;
-    }
-
-    /**
      * Tworzy przycisk i przypisuje go do podanej grupy.
      *
      * @param toggleGroup grupa opcji
@@ -349,27 +313,6 @@ public class MorphologyWindow {
         currentBorderType = newValue;
 
         reloadPreview();
-    }
-
-    /**
-     * Tworzy slider do wyboru wielkości kszałtu do przeprowadzenia operacji
-     */
-    private void createSlider() {
-        slider = new Slider(MIN_LEVEL, MAX_LEVEL, MIN_LEVEL);
-        slider.setPrefWidth(80);
-        slider.setBlockIncrement(2);
-        slider.setMajorTickUnit(2);
-        slider.setMinorTickCount(0);
-        slider.setShowTickLabels(true);
-        slider.setSnapToTicks(true);
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int intValue = newValue.intValue();
-            if (intValue % 2 != 0) {
-                slider.setValue(intValue);
-                currentSize = intValue;
-                reloadPreview();
-            }
-        });
     }
 
     /**
