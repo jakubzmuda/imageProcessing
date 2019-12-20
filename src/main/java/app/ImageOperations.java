@@ -3,6 +3,7 @@ package app;
 import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.Tuple3;
+import io.vavr.collection.List;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
@@ -131,7 +132,7 @@ public class ImageOperations {
     }
 
     private int applyMaskSingleCanal(Neighbourhood3x3 neighbourhood, Mask mask, BorderOperationStrategy strategy, Function1<Canals, Integer> colorRetriever) {
-        Neighbourhood3x3 nominatorNeighbourhood = strategy !=  BorderOperationStrategy.EXISTING_ONLY ? neighbourhood : neighbourhood.emptyToZero();
+        Neighbourhood3x3 nominatorNeighbourhood = strategy != BorderOperationStrategy.EXISTING_ONLY ? neighbourhood : neighbourhood.emptyToZero();
 
         int i0 = colorRetriever.apply(nominatorNeighbourhood.i0) * mask.i0;
         int i1 = colorRetriever.apply(nominatorNeighbourhood.i1) * mask.i1;
@@ -201,8 +202,32 @@ public class ImageOperations {
     }
 
     public Image segmentationSplitAndMerge(Image inputImage) {
-        int localThreshold = 10;
+        ImageMap imageMap = new ImageConverter().toImageMap(inputImage);
+        int threshold = 50;
+
+        List<Region> regions = new Region(imageMap).split();
+        while (regions.filter(region -> !region.isHomogeneous(threshold)).size() > 0) {
+            regions = splitEpochIfNotHomogeneous(regions, threshold);
+            System.out.println("splitting, number of new regions " + regions.size());
+        }
+
+        //todo tutaj trzeba zebrać te regiony i narysować mapę
+        System.out.println("ok");
 
         return inputImage;
+    }
+
+    private List<Region> splitEpochIfNotHomogeneous(List<Region> regions, int threshold) {
+        java.util.List<Region> output = new java.util.ArrayList<>();
+
+        for (Region region : regions) {
+            if (!region.isHomogeneous(threshold)) {
+                output.addAll(region.split().asJava());
+            } else {
+                output.add(region);
+            }
+        }
+
+        return List.ofAll(output);
     }
 }
