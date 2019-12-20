@@ -201,6 +201,8 @@ public class ImageOperations {
     }
 
     public Image segmentationSplitAndMerge(Image inputImage) {
+        int localThreshold = 10;
+
         return inputImage;
     }
 }

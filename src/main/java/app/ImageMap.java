@@ -24,6 +24,10 @@ public class ImageMap {
         return map.get(x).get(y);
     }
 
+    public int getGray(int x, int y) {
+        return map.get(x).get(y).red;
+    }
+
     public Canals maxColorCanalValues() {
         Canals currentBiggest = new Canals(0, 0, 0);
         for (Map.Entry<Integer, Map<Integer, Canals>> e : map.entrySet()) {
