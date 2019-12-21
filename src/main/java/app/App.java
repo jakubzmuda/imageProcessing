@@ -281,7 +281,7 @@ public class App extends Application {
     private Menu buildLab4MenuTab() {
         Menu menu = new Menu("Lab 4");
         MenuItem menuItem = buildMorphologyMenuItem();
-        menu.getItems().addAll(menuItem, buildThinningMenuItem());
+        menu.getItems().addAll(menuItem, buildThinningMenuItem(), buildCombiningMasksMenuItem());
         return menu;
     }
 
@@ -374,6 +374,12 @@ public class App extends Application {
     private MenuItem buildThinningMenuItem() {
         MenuItem smoothingItem = new MenuItem("Szkieletyzacja");
         smoothingItem.setOnAction(e -> new ThinningWindow(image, this));
+        return smoothingItem;
+    }
+
+    private MenuItem buildCombiningMasksMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Łączenie masek");
+        smoothingItem.setOnAction(e -> new CombineMasksWindow(image, this));
         return smoothingItem;
     }
 

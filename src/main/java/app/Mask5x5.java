@@ -7,17 +7,12 @@ import static org.opencv.core.CvType.CV_32F;
 /**
  * Klasa reprezentuje maskę 3x3.
  */
-public class Mask3x3 implements IMask {
+public class Mask5x5 implements IMask {
 
     /**
      * Nazwa maski.
      */
     private String name;
-
-    /**
-     * Flaga oznaczająca, że maska jest parametryzowana.
-     */
-    private boolean isParametrized;
 
     /**
      * Tablica wartości w masce.
@@ -44,19 +39,17 @@ public class Mask3x3 implements IMask {
     /**
      * Konstruktor tworzący maskę.
      *
-     * @param name           nazwa maski
-     * @param isParametrized czy jest parametryzowana
-     * @param values         tablica wartości w masce (musi być ich 9)
+     * @param name   nazwa maski
+     * @param values tablica wartości w masce (musi być ich 25)
      */
-    public Mask3x3(String name, boolean isParametrized, double... values) {
-        if (values.length != 9) {
+    public Mask5x5(String name, double... values) {
+        if (values.length != 25) {
             throw new IllegalArgumentException("Incorrect values number!");
         }
 
         this.name = name;
-        this.isParametrized = isParametrized;
         this.values = values;
-        this.size = 3;
+        this.size = 5;
         this.kernelSize = calculateKernelSize();
         createMat();
     }
@@ -68,17 +61,13 @@ public class Mask3x3 implements IMask {
         mat = new Mat(size, size, CV_32F) {
             {
                 int divider = kernelSize != 0 ? kernelSize : 1;
-                put(0, 0, (values[0] / divider));
-                put(0, 1, (values[1] / divider));
-                put(0, 2, (values[2] / divider));
 
-                put(1, 0, (values[3] / divider));
-                put(1, 1, (values[4] / divider));
-                put(1, 2, (values[5] / divider));
-
-                put(2, 0, (values[6] / divider));
-                put(2, 1, (values[7] / divider));
-                put(2, 2, (values[8] / divider));
+                for (int row = 0; row < size; row++) {
+                    for (int col = 0; col < size; col++) {
+                        double value = values[row * size + col];
+                        put(row, col, value / divider);
+                    }
+                }
             }
         };
     }
@@ -98,27 +87,18 @@ public class Mask3x3 implements IMask {
     }
 
     /**
-     * Zmienia wartość środkową maski parametryzowanej i przelicza maskę.
-     *
-     * @param newValue nowa wartość środkowa
-     */
-    public void updateMiddleElement(double newValue) {
-        values[4] = newValue;
-        this.kernelSize = calculateKernelSize();
-        createMat();
-    }
-
-    /**
      * Zamienia maskę na tabelkę z jej wartościami.
      *
      * @return
      */
     @Override
     public String toString() {
-        return String.format("%4d%4d%4d\n%4d%4s%4d\n%4d%4d%4d",
-                (int) values[0], (int) values[1], (int) values[2],
-                (int) values[3], (isParametrized ? "k" : (int) values[4]), (int) values[5],
-                (int) values[6], (int) values[7], (int) values[8]);
+        return String.format("%4d%4d%4d%4d%4d\n%4d%4s%4d%4d%4d\n%4d%4d%4d%4d%4d\n%4d%4s%4d%4d%4d\n%4d%4d%4d%4d%4d",
+                (int) values[0], (int) values[1], (int) values[2], (int) values[3], (int) values[4],
+                (int) values[5], (int) values[6], (int) values[7], (int) values[8], (int) values[9],
+                (int) values[10], (int) values[11], (int) values[12], (int) values[13], (int) values[14],
+                (int) values[15], (int) values[16], (int) values[17], (int) values[18], (int) values[19],
+                (int) values[20], (int) values[21], (int) values[22], (int) values[23], (int) values[24]);
     }
 
     @Override
@@ -129,9 +109,5 @@ public class Mask3x3 implements IMask {
     @Override
     public Mat getMat() {
         return mat;
-    }
-
-    public double[] getValues() {
-        return values;
     }
 }
