@@ -187,7 +187,9 @@ public class MorphologyWindow {
 
         rectangle.setSelected(true);
         handleShapeChanges(shape);
-        return new VBox(rectangle, cross);
+        VBox vBox = new VBox(rectangle, cross);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
     }
 
     /**
@@ -204,7 +206,9 @@ public class MorphologyWindow {
 
         erode.setSelected(true);
         handleOperationChanges(operations);
-        return new VBox(erode, dilate, open, close);
+        VBox vBox = new VBox(erode, dilate, open, close);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
     }
 
     /**
@@ -299,7 +303,9 @@ public class MorphologyWindow {
 
         handleBorderOptionChange(Core.BORDER_DEFAULT);
 
-        return new VBox(borderTypeLabel);
+        VBox vBox = new VBox(borderTypeLabel);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
     }
 
     /**
