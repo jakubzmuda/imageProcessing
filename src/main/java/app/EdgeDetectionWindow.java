@@ -410,8 +410,8 @@ public class EdgeDetectionWindow {
         HistogramPainter histogramPainter = new HistogramPainter(image);
         BarChart<String, Number> histogram = histogramPainter.paintChart();
 
-        histogram.setMaxWidth(300);
-        histogram.setMaxHeight(300);
+        histogram.setMaxWidth(150);
+        histogram.setMaxHeight(150);
 
         histogram.getData().addAll(
                 histogramPainter.getSeriesRed(),
