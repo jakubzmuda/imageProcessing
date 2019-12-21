@@ -273,8 +273,9 @@ public class App extends Application {
         MenuItem smoothingItem = buildSmoothingMenuItem();
         MenuItem sharpeningItem = buildSharpeningMenuItem();
         MenuItem edgeDetectionItem = buildEdgeDetectionMenuItem();
+        MenuItem ownMask = buildOwnMaskMenuItem();
         Menu menu = new Menu("Lab 3");
-        menu.getItems().addAll(smoothingItem, sharpeningItem, edgeDetectionItem);
+        menu.getItems().addAll(smoothingItem, sharpeningItem, edgeDetectionItem, ownMask);
         return menu;
     }
 
@@ -356,6 +357,12 @@ public class App extends Application {
     private MenuItem buildEdgeDetectionMenuItem() {
         MenuItem smoothingItem = new MenuItem("Detekcja krawędzi");
         smoothingItem.setOnAction(e -> new EdgeDetectionWindow(image, this));
+        return smoothingItem;
+    }
+
+    private MenuItem buildOwnMaskMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Własna maska");
+        smoothingItem.setOnAction(e -> new CreateMaskWindow(image, this));
         return smoothingItem;
     }
 
