@@ -126,13 +126,9 @@ public class ThinningWindow {
                 stage.close();
             }
         });
-        Button cancel = new Button("Odrzuć");
-        cancel.setOnAction(event -> {
-            stage.close();
-        });
-        Button save = new Button("Zachowaj obecny krok");
+        Button save = new Button("Kontynuuj");
         save.setOnAction(event -> saveAndClose());
-        HBox buttonsHbox = new HBox(cancel, save);
+        HBox buttonsHbox = new HBox(save);
         buttonsHbox.setSpacing(15);
         buttonsHbox.setAlignment(Pos.CENTER);
         HBox stepSliderHBox = new HBox(stepSlider, stepValue);
@@ -144,17 +140,17 @@ public class ThinningWindow {
         VBox objectBackgroundVBox = createObjectBackgroundOptions();
         VBox borderVBox = createBorderOptions();
 
-        HBox buttons = new HBox(
-                objectBackgroundVBox, new Separator(VERTICAL),
+        VBox buttons = new VBox(
+                objectBackgroundVBox,
                 borderVBox, new Separator(VERTICAL),
                 buttonsStepVbox
         );
 
         buttons.setPadding(new Insets(13, 10, 10, 0));
         buttons.setSpacing(15);
-        buttons.setMaxHeight(OPTIONS_HEIGHT);
         buttons.setAlignment(Pos.CENTER);
         vBox = new VBox(hBox, buttons);
+        vBox.setAlignment(Pos.CENTER);
 
         Scene scene = createScene(beforeImageViewHbox, afterImageViewHbox);
 
@@ -205,8 +201,7 @@ public class ThinningWindow {
      */
     private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        double windowHeight = afterImageView.getBoundsInLocal().getHeight() + OPTIONS_HEIGHT;
-        Scene scene = new Scene(vBox, windowWidth, windowHeight);
+        Scene scene = new Scene(vBox, windowWidth, 800);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
