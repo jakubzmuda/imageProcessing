@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -45,6 +46,9 @@ public class ThinningWindow {
      */
     private static final int MINIMAL_WIDTH = 550;
     private final App app;
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
+    private VBox afterImageViewHbox;
 
     /**
      * Podgląd obrazu przed i po operacji.
@@ -110,12 +114,18 @@ public class ThinningWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, this.beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, this.afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
+
+        reloadPreview();
 
         Button save = new Button("Kontynuuj");
         save.setOnAction(event -> saveAndClose());
@@ -148,7 +158,6 @@ public class ThinningWindow {
         background = WHITE;
         patterns = BlackObjectPatterns.getPATTERNS();
 
-        reloadPreview();
 
         currentBorderType = Core.BORDER_CONSTANT;
         border = new Scalar(255, 255, 255, 255);
@@ -198,7 +207,7 @@ public class ThinningWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
         Scene scene = new Scene(vBox, windowWidth, 800);
         scene.setOnKeyPressed(event -> {
@@ -250,6 +259,9 @@ public class ThinningWindow {
     private void reloadPreview() {
         after = applyThinning();
         afterImageView.setImage(after);
+
+        this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     private Image applyThinning() {
@@ -379,6 +391,21 @@ public class ThinningWindow {
         }
 
         throw new IllegalArgumentException();
+    }
+
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
+        histogram.setMaxWidth(300);
+        histogram.setMaxHeight(300);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 
 }
