@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,6 +67,10 @@ public class SmoothLinearWindow {
     private VBox vBox;
     private HBox hBox;
     private TextField slider;
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
+    private VBox afterImageViewHbox;
+
 
     /**
      * Obrazy przed i po operacji.
@@ -128,9 +133,13 @@ public class SmoothLinearWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
@@ -180,7 +189,7 @@ public class SmoothLinearWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
         Scene scene = new Scene(vBox, windowWidth, 900);
         scene.setOnKeyPressed(event -> {
@@ -365,6 +374,9 @@ public class SmoothLinearWindow {
     private void reloadPreview() {
         after = applyMask(currentMask);
         afterImageView.setImage(after);
+
+        this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     /**
@@ -390,6 +402,21 @@ public class SmoothLinearWindow {
         for (int i = 0; i < times; i++) {
             FilteringUtils.applyMask(image, mask, currentBorderType, border);
         }
+    }
+
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
+        histogram.setMaxWidth(300);
+        histogram.setMaxHeight(300);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 
 }
