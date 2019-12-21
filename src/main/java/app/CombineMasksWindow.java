@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static app.MatScalingUtils.*;
-import static javafx.geometry.Orientation.VERTICAL;
 
 /**
  * Klasa reprezentująca okno łączenie dwóch masek w jedną.
@@ -133,7 +132,13 @@ public class CombineMasksWindow {
         twoMasksPreview = false;
         times = 1;
 
-        HBox createMaskHBox = new HBox(masksVBox);
+        combinedMaskLabel = new Label("Łączona:\n" + combinedMask.toString());
+        VBox resultVBox = new VBox(combinedMaskLabel);
+        resultVBox.setAlignment(Pos.CENTER);
+        resultVBox.setSpacing(15);
+
+        HBox createMaskHBox = new HBox(masksVBox, combinedMaskLabel);
+        createMaskHBox.setSpacing(64);
         createMaskHBox.setAlignment(Pos.CENTER);
         createMaskHBox.setPrefWidth(200);
 
@@ -154,48 +159,50 @@ public class CombineMasksWindow {
 
         Label timesLabel = new Label("n = ");
         TextField timesField = new TextField("1");
+        timesField.setPrefWidth(100);
+        timesField.setMaxWidth(100);
         timesField.textProperty().addListener((observable, oldValue, newValue) -> {
             this.times = Double.parseDouble(newValue);
             reloadPreview();
         });
 
-        VBox timesBox = new VBox(timesLabel, timesField);
+        HBox timesBox = new HBox(timesLabel, timesField);
+        timesBox.setAlignment(Pos.CENTER);
+        timesBox.setSpacing(16);
 
         HBox buttonsHbox = new HBox(save);
         buttonsHbox.setSpacing(15);
         buttonsHbox.setAlignment(Pos.CENTER);
 
         VBox buttonsTimesVbox = new VBox(timesBox, buttonsHbox);
-        buttonsTimesVbox.setAlignment(Pos.CENTER_RIGHT);
+        buttonsTimesVbox.setAlignment(Pos.CENTER);
         buttonsTimesVbox.setSpacing(15);
-
-        combinedMaskLabel = new Label("Wynik:\n" + combinedMask.toString());
-        VBox resultVBox = new VBox(combinedMaskLabel);
-        resultVBox.setAlignment(Pos.CENTER);
-        resultVBox.setSpacing(15);
 
         Button partialButton = new Button("Składowe");
         partialButton.setOnAction((event) -> handlePreviewToggle(true));
         Button combinedButton = new Button("Wynikowa");
         combinedButton.setOnAction((event) -> handlePreviewToggle(false));
 
+        HBox hbox = new HBox(partialButton, combinedButton);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(16);
+
         VBox borderVBox = createBorderOptions();
-        VBox previewAndBorderVBox = new VBox(partialButton, combinedButton, borderVBox);
+        VBox previewAndBorderVBox = new VBox(hbox, borderVBox);
         previewAndBorderVBox.setAlignment(Pos.CENTER);
         previewAndBorderVBox.setSpacing(15);
 
         VBox scalingVBox = createScalingOptions();
-        VBox combinedMaskAndScalingVBox = new VBox(resultVBox, new Separator(), scalingVBox);
+        VBox combinedMaskAndScalingVBox = new VBox(scalingVBox);
         combinedMaskAndScalingVBox.setPrefWidth(120);
 
-        HBox buttons = new HBox(createMaskHBox, new Separator(VERTICAL),
-                previewAndBorderVBox, new Separator(VERTICAL),
-                combinedMaskAndScalingVBox, new Separator(VERTICAL),
+        VBox buttons = new VBox(createMaskHBox,
+                previewAndBorderVBox,
+                combinedMaskAndScalingVBox,
                 buttonsTimesVbox);
         buttons.setPadding(new Insets(13, 10, 10, 0));
         buttons.setSpacing(15);
-        buttons.setMaxHeight(OPTIONS_HEIGHT);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.setAlignment(Pos.CENTER);
         masksVBox = new VBox(hBox, buttons);
 
         Scene scene = createScene(masksVBox, beforeImageViewHbox, afterImageViewHbox);
@@ -219,8 +226,7 @@ public class CombineMasksWindow {
      */
     private Scene createScene(VBox masksVBox, HBox beforeImageViewHbox, HBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        double windowHeight = afterImageView.getBoundsInLocal().getHeight() + OPTIONS_HEIGHT;
-        Scene scene = new Scene(masksVBox, windowWidth, windowHeight);
+        Scene scene = new Scene(masksVBox, windowWidth, 800);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
@@ -250,7 +256,7 @@ public class CombineMasksWindow {
         HBox spinnerB2Hbox = new HBox(spinnersB.get(3), spinnersB.get(4), spinnersB.get(5));
         HBox spinnerB3Hbox = new HBox(spinnersB.get(6), spinnersB.get(7), spinnersB.get(8));
 
-        VBox masksVBox = new VBox(spinnerA1Hbox, spinnerA2Hbox, spinnerA3Hbox, new Separator(), spinnerB1Hbox, spinnerB2Hbox, spinnerB3Hbox);
+        VBox masksVBox = new VBox(new Label("A"), spinnerA1Hbox, spinnerA2Hbox, spinnerA3Hbox, new Separator(), new Label("B"), spinnerB1Hbox, spinnerB2Hbox, spinnerB3Hbox);
         masksVBox.setPrefWidth(180);
 
         return masksVBox;
@@ -342,7 +348,7 @@ public class CombineMasksWindow {
                 -> handleBorderOptionChange(newValue));
 
         VBox borderVbox = new VBox(borderTypeLabel, replicatedBorder, reflectedBorder, existingBorder, minimum, maximum);
-        borderVbox.setAlignment(Pos.CENTER_LEFT);
+        borderVbox.setAlignment(Pos.CENTER);
         return borderVbox;
     }
 
@@ -394,7 +400,9 @@ public class CombineMasksWindow {
             reloadPreview();
         });
 
-        return new VBox(borderTypeLabel, method3, method1, method2);
+        VBox vBox = new VBox(borderTypeLabel, method3, method1, method2);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
     }
 
     /**
