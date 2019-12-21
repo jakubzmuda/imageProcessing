@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,6 +45,9 @@ public class CombineMasksWindow {
      */
     private static final int MINIMAL_WIDTH = 820;
     private final App app;
+    private final VBox afterImageViewHbox;
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
 
     /**
      * Podgląd obrazu przed i po operacji.
@@ -137,6 +141,7 @@ public class CombineMasksWindow {
         resultVBox.setAlignment(Pos.CENTER);
         resultVBox.setSpacing(15);
 
+
         HBox createMaskHBox = new HBox(masksVBox, combinedMaskLabel);
         createMaskHBox.setSpacing(64);
         createMaskHBox.setAlignment(Pos.CENTER);
@@ -145,9 +150,13 @@ public class CombineMasksWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
@@ -224,9 +233,9 @@ public class CombineMasksWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(VBox masksVBox, HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox masksVBox, VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        Scene scene = new Scene(masksVBox, windowWidth, 800);
+        Scene scene = new Scene(masksVBox, windowWidth, 1000);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
@@ -439,6 +448,9 @@ public class CombineMasksWindow {
     private void reloadPreview() {
         after = applyMask();
         afterImageView.setImage(after);
+
+        this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     /**
@@ -505,6 +517,21 @@ public class CombineMasksWindow {
         }
 
         MatScalingUtils.scale(image, currentScalingMethod);
+    }
+
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
+        histogram.setMaxWidth(200);
+        histogram.setMaxHeight(200);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 
 }
