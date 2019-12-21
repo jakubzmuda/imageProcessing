@@ -152,22 +152,20 @@ public class CombineMasksWindow {
             stage.close();
         });
 
-        Slider timesSlider = new Slider(1, 20, 1);
-        timesSlider.setPrefWidth(120);
-        Label timesValue = new Label("1x");
-        timesValue.setPrefWidth(30);
-        timesSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            timesValue.setText(newValue.intValue() + "x");
-            times = newValue.intValue();
+        Label timesLabel = new Label("n = ");
+        TextField timesField = new TextField("1");
+        timesField.textProperty().addListener((observable, oldValue, newValue) -> {
+            this.times = Double.parseDouble(newValue);
             reloadPreview();
         });
+
+        VBox timesBox = new VBox(timesLabel, timesField);
+
         HBox buttonsHbox = new HBox(save);
         buttonsHbox.setSpacing(15);
         buttonsHbox.setAlignment(Pos.CENTER);
-        HBox timesSliderHBox = new HBox(timesSlider, timesValue);
-        timesSliderHBox.setAlignment(Pos.CENTER_RIGHT);
 
-        VBox buttonsTimesVbox = new VBox(timesSliderHBox, buttonsHbox);
+        VBox buttonsTimesVbox = new VBox(timesBox, buttonsHbox);
         buttonsTimesVbox.setAlignment(Pos.CENTER_RIGHT);
         buttonsTimesVbox.setSpacing(15);
 
@@ -176,13 +174,13 @@ public class CombineMasksWindow {
         resultVBox.setAlignment(Pos.CENTER);
         resultVBox.setSpacing(15);
 
-        ToggleButton previewToggleButton = new ToggleButton("Podgląd maski wynikowej");
-        previewToggleButton.setPrefWidth(170);
-        previewToggleButton.selectedProperty().addListener((observable, oldValue, newValue)
-                -> handlePreviewToggle(previewToggleButton, newValue));
+        Button partialButton = new Button("Składowe");
+        partialButton.setOnAction((event) -> handlePreviewToggle(true));
+        Button combinedButton = new Button("Wynikowa");
+        combinedButton.setOnAction((event) -> handlePreviewToggle(false));
 
         VBox borderVBox = createBorderOptions();
-        VBox previewAndBorderVBox = new VBox(previewToggleButton, borderVBox);
+        VBox previewAndBorderVBox = new VBox(partialButton, combinedButton, borderVBox);
         previewAndBorderVBox.setAlignment(Pos.CENTER);
         previewAndBorderVBox.setSpacing(15);
 
@@ -231,20 +229,8 @@ public class CombineMasksWindow {
         return scene;
     }
 
-    /**
-     * Obsługuje zmianę podglądu maska wynikowa / operacja na dwóch maskach po kolei.
-     *
-     * @param previewToggleButton przycisk do zmiany podglądu
-     * @param newValue            nowa wartość przycisku
-     */
-    private void handlePreviewToggle(ToggleButton previewToggleButton, Boolean newValue) {
+    private void handlePreviewToggle(Boolean newValue) {
         twoMasksPreview = newValue;
-        if (newValue) {
-            previewToggleButton.setText("Podgląd masek składowych");
-        } else {
-            previewToggleButton.setText("Podgląd maski wynikowej");
-        }
-
         reloadPreview();
     }
 
@@ -254,20 +240,17 @@ public class CombineMasksWindow {
      * @return obszar do sterowania wartościami masek
      */
     private VBox createMasksVBoxBox() {
-        Label maskALabel = new Label("Maska A:");
         spinnersA = createSpinners();
         HBox spinnerA1Hbox = new HBox(spinnersA.get(0), spinnersA.get(1), spinnersA.get(2));
         HBox spinnerA2Hbox = new HBox(spinnersA.get(3), spinnersA.get(4), spinnersA.get(5));
         HBox spinnerA3Hbox = new HBox(spinnersA.get(6), spinnersA.get(7), spinnersA.get(8));
 
-        Label maskBLabel = new Label("Maska B:");
         spinnersB = createSpinners();
         HBox spinnerB1Hbox = new HBox(spinnersB.get(0), spinnersB.get(1), spinnersB.get(2));
         HBox spinnerB2Hbox = new HBox(spinnersB.get(3), spinnersB.get(4), spinnersB.get(5));
         HBox spinnerB3Hbox = new HBox(spinnersB.get(6), spinnersB.get(7), spinnersB.get(8));
 
-        VBox masksVBox = new VBox(maskALabel, spinnerA1Hbox, spinnerA2Hbox, spinnerA3Hbox, new Separator(),
-                maskBLabel, spinnerB1Hbox, spinnerB2Hbox, spinnerB3Hbox);
+        VBox masksVBox = new VBox(spinnerA1Hbox, spinnerA2Hbox, spinnerA3Hbox, new Separator(), spinnerB1Hbox, spinnerB2Hbox, spinnerB3Hbox);
         masksVBox.setPrefWidth(180);
 
         return masksVBox;
