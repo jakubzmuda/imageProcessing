@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nu.pattern.OpenCV;
 
@@ -328,10 +329,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-//            FileChooser fileChooser = new FileChooser(); //nocommit
-//            File file = fileChooser.showOpenDialog(null);
-            ClassLoader classLoader = getClass().getClassLoader(); // fast load
-            File file = new File(classLoader.getResource("blackAndWhite.bmp").getFile());
+            FileChooser fileChooser = new FileChooser(); //nocommit
+            File file = fileChooser.showOpenDialog(null);
+//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+//            File file = new File(classLoader.getResource("blackAndWhite.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
