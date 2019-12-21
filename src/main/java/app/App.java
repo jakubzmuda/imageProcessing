@@ -274,8 +274,9 @@ public class App extends Application {
         MenuItem sharpeningItem = buildSharpeningMenuItem();
         MenuItem edgeDetectionItem = buildEdgeDetectionMenuItem();
         MenuItem ownMask = buildOwnMaskMenuItem();
+        MenuItem median = buildMedianMenuItem();
         Menu menu = new Menu("Lab 3");
-        menu.getItems().addAll(smoothingItem, sharpeningItem, edgeDetectionItem, ownMask);
+        menu.getItems().addAll(smoothingItem, sharpeningItem, edgeDetectionItem, ownMask, median);
         return menu;
     }
 
@@ -363,6 +364,12 @@ public class App extends Application {
     private MenuItem buildOwnMaskMenuItem() {
         MenuItem smoothingItem = new MenuItem("Własna maska");
         smoothingItem.setOnAction(e -> new CreateMaskWindow(image, this));
+        return smoothingItem;
+    }
+
+    private MenuItem buildMedianMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Operacja medianowa");
+        smoothingItem.setOnAction(e -> new MedianFilterWindow(image, this));
         return smoothingItem;
     }
 
