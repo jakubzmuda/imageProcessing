@@ -3,7 +3,9 @@ package app;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -17,8 +19,6 @@ import org.opencv.core.Scalar;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static javafx.geometry.Orientation.VERTICAL;
 
 /**
  * Klasa reprezentująca okno wykrywania krawędzi w obrazie.
@@ -117,15 +117,6 @@ public class ThinningWindow {
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
 
-        Button apply = new Button("Zastosuj");
-        apply.setOnAction(event -> {
-            try {
-                reloadPreview();
-            } catch (RuntimeException e) {
-                System.out.println("error " + e);
-                stage.close();
-            }
-        });
         Button save = new Button("Kontynuuj");
         save.setOnAction(event -> saveAndClose());
         HBox buttonsHbox = new HBox(save);
@@ -133,16 +124,15 @@ public class ThinningWindow {
         buttonsHbox.setAlignment(Pos.CENTER);
         HBox stepSliderHBox = new HBox(stepSlider, stepValue);
         stepSliderHBox.setAlignment(Pos.CENTER);
-        VBox buttonsStepVbox = new VBox(stepSliderHBox, apply, buttonsHbox);
+        VBox buttonsStepVbox = new VBox(stepSliderHBox, buttonsHbox);
         buttonsStepVbox.setAlignment(Pos.CENTER);
         buttonsStepVbox.setSpacing(15);
 
-        VBox objectBackgroundVBox = createObjectBackgroundOptions();
         VBox borderVBox = createBorderOptions();
+        borderVBox.setAlignment(Pos.CENTER);
 
         VBox buttons = new VBox(
-                objectBackgroundVBox,
-                borderVBox, new Separator(VERTICAL),
+                borderVBox,
                 buttonsStepVbox
         );
 
@@ -153,6 +143,15 @@ public class ThinningWindow {
         vBox.setAlignment(Pos.CENTER);
 
         Scene scene = createScene(beforeImageViewHbox, afterImageViewHbox);
+
+        object = BLACK;
+        background = WHITE;
+        patterns = BlackObjectPatterns.getPATTERNS();
+
+        reloadPreview();
+
+        currentBorderType = Core.BORDER_CONSTANT;
+        border = new Scalar(255, 255, 255, 255);
 
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -216,81 +215,9 @@ public class ThinningWindow {
      * @return obszar z opcjami dotyczącymi pikseli brzegowych.
      */
     private VBox createBorderOptions() {
-        ToggleGroup borderTypeGroup = new ToggleGroup();
-        Label borderTypeLabel = new Label("Piksele brzegowe:");
+        Label borderTypeLabel = new Label("Piksele brzegowe: wartość maksymalna");
 
-        RadioButton maximum = new RadioButton("Wartość maksymalna");
-        maximum.setUserData(BORDER_MAXIMUM);
-        maximum.setToggleGroup(borderTypeGroup);
-        maximum.setSelected(true);
-
-        RadioButton minimum = new RadioButton("Wartość minimalna");
-        minimum.setUserData(BORDER_MINIMUM);
-        minimum.setToggleGroup(borderTypeGroup);
-
-        borderTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue)
-                -> handleBorderOptionChange(newValue));
-
-        return new VBox(borderTypeLabel, maximum, minimum);
-    }
-
-    /**
-     * Obsługuję zmianę opcji dotyczących pikseli brzegowych.
-     *
-     * @param newValue wybrana opcja
-     */
-    private void handleBorderOptionChange(Toggle newValue) {
-        int selected = (int) newValue.getUserData();
-        if (selected == BORDER_MINIMUM) {
-            currentBorderType = Core.BORDER_CONSTANT;
-            border = new Scalar(0, 0, 0, 255);
-        } else {
-            currentBorderType = Core.BORDER_CONSTANT;
-            border = new Scalar(255, 255, 255, 255);
-        }
-    }
-
-    /**
-     * Tworzy opcje wyboru typu obiektu (czarno obiekt na białym tle
-     * lub biały na czarnym)
-     *
-     * @return obszar z opcjami wyboru
-     */
-    private VBox createObjectBackgroundOptions() {
-        ToggleGroup group = new ToggleGroup();
-        Label borderTypeLabel = new Label("Typ obiektu:");
-
-        RadioButton black = new RadioButton("Czarny obiekt na białym tle");
-        black.setUserData(BLACK);
-        black.setToggleGroup(group);
-        black.setSelected(true);
-
-        RadioButton white = new RadioButton("Biały obiekt na czarnym tle");
-        white.setUserData(WHITE);
-        white.setToggleGroup(group);
-
-        group.selectedToggleProperty().addListener((observable, oldValue, newValue)
-                -> handleObjectBackgroundOptionChange(newValue));
-
-        return new VBox(borderTypeLabel, black, white);
-    }
-
-    /**
-     * Aktualizuje wybrany typ obiektu.
-     *
-     * @param newValue
-     */
-    private void handleObjectBackgroundOptionChange(Toggle newValue) {
-        double selected = (double) newValue.getUserData();
-        if (selected == BLACK) {
-            object = BLACK;
-            background = WHITE;
-            patterns = BlackObjectPatterns.getPATTERNS();
-        } else {
-            object = WHITE;
-            background = BLACK;
-            patterns = WhiteObjectPatterns.getPATTERNS();
-        }
+        return new VBox(borderTypeLabel);
     }
 
     /**
