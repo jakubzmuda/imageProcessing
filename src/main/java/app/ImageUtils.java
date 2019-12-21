@@ -99,7 +99,7 @@ public class ImageUtils {
      */
     public static Image mat2Image(Mat mat) {
         MatOfByte buffer = new MatOfByte();
-        Imgcodecs.imencode(".png", mat, buffer);
+        Imgcodecs.imencode(".bmp", mat, buffer);
 
         return new Image(new ByteArrayInputStream(buffer.toArray()));
     }

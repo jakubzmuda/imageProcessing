@@ -80,8 +80,9 @@ public class App extends Application {
         Menu lab3Menu = buildLab3MenuTab();
         Menu lab4Menu = buildLab4MenuTab();
         Menu lab5Menu = buildLab5MenuTab();
+        Menu exportMenu = buildExportMenuTab();
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu, lab4Menu, lab5Menu);
+        menuBar.getMenus().addAll(fileMenu, lab1Menu, lab2Menu, lab3Menu, lab4Menu, lab5Menu, exportMenu);
         return menuBar;
     }
 
@@ -294,6 +295,18 @@ public class App extends Application {
         MenuItem segmentationGrow = buildSegmentationGrow();
         menu.getItems().addAll(segmentationSplitAndMerge, segmentationGrow);
         return menu;
+    }
+
+    private Menu buildExportMenuTab() {
+        Menu menu = new Menu("export");
+        menu.getItems().addAll(buildExport());
+        return menu;
+    }
+
+    private MenuItem buildExport() {
+        MenuItem smoothingItem = new MenuItem("BMP");
+        smoothingItem.setOnAction(e -> new ImageSerializer().saveToFile(image));
+        return smoothingItem;
     }
 
     public void updateImage(Image newImage) {
