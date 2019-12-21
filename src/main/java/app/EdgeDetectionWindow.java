@@ -3,6 +3,7 @@ package app;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,6 +50,10 @@ public class EdgeDetectionWindow {
      */
     private ImageView beforeImageView;
     private ImageView afterImageView;
+
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
+    private VBox afterImageViewHbox;
 
     /**
      * Elementy okna.
@@ -114,9 +119,13 @@ public class EdgeDetectionWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
@@ -141,6 +150,7 @@ public class EdgeDetectionWindow {
         masksHBox.setSpacing(15);
         masksHBox.setPrefHeight(60);
         VBox radioHBox = new VBox(borderVBox, scalingVBox);
+        masksHBox.setAlignment(Pos.CENTER);
         radioHBox.setSpacing(15);
 
         VBox buttons = new VBox(new VBox(masksHBox, radioHBox), buttonsTimesVbox);
@@ -168,7 +178,7 @@ public class EdgeDetectionWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
         Scene scene = new Scene(vBox, windowWidth, 900);
         scene.setOnKeyPressed(event -> {
@@ -342,6 +352,9 @@ public class EdgeDetectionWindow {
     private void reloadPreview() {
         after = applyMask(currentMask);
         afterImageView.setImage(after);
+
+        this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     /**
@@ -391,6 +404,21 @@ public class EdgeDetectionWindow {
         for (int i = 0; i < times; i++) {
             FilteringUtils.applyMaskWithBlur(image, mask, currentBorderType, border);
         }
+    }
+
+    private BarChart<String, Number> buildHistogram(Image image) {
+        HistogramPainter histogramPainter = new HistogramPainter(image);
+        BarChart<String, Number> histogram = histogramPainter.paintChart();
+
+        histogram.setMaxWidth(300);
+        histogram.setMaxHeight(300);
+
+        histogram.getData().addAll(
+                histogramPainter.getSeriesRed(),
+                histogramPainter.getSeriesGreen(),
+                histogramPainter.getSeriesBlue());
+
+        return histogram;
     }
 
 }
