@@ -348,7 +348,7 @@ public class App extends Application {
 
     private MenuItem buildSharpeningMenuItem() {
         MenuItem smoothingItem = new MenuItem("Wyostrzanie");
-        smoothingItem.setOnAction(e -> new Lab3(image, this).sharpening());
+        smoothingItem.setOnAction(e -> new SharpenWindow(image, this));
         return smoothingItem;
     }
 

@@ -134,4 +134,8 @@ public class Mask3x3 implements IMask {
     public double[] getValues() {
         return values;
     }
+
+    public String getName() {
+        return name;
+    }
 }
