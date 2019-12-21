@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import nu.pattern.OpenCV;
 
@@ -280,7 +281,7 @@ public class App extends Application {
     private Menu buildLab4MenuTab() {
         Menu menu = new Menu("Lab 4");
         MenuItem menuItem = buildMorphologyMenuItem();
-        menu.getItems().addAll(menuItem);
+        menu.getItems().addAll(menuItem, buildThinningMenuItem());
         return menu;
     }
 
@@ -325,10 +326,10 @@ public class App extends Application {
         MenuItem openImageItem = new MenuItem("Otwórz");
 
         openImageItem.setOnAction(t -> {
-//            FileChooser fileChooser = new FileChooser(); //nocommit
-//            File file = fileChooser.showOpenDialog(null);
-            ClassLoader classLoader = getClass().getClassLoader(); // fast load
-            File file = new File(classLoader.getResource("blackAndWhite.bmp").getFile());
+            FileChooser fileChooser = new FileChooser(); //nocommit
+            File file = fileChooser.showOpenDialog(null);
+//            ClassLoader classLoader = getClass().getClassLoader(); // fast load
+//            File file = new File(classLoader.getResource("blackAndWhite.bmp").getFile());
 
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
@@ -369,6 +370,13 @@ public class App extends Application {
         smoothingItem.setOnAction(e -> new MorphologyWindow(image, this));
         return smoothingItem;
     }
+
+    private MenuItem buildThinningMenuItem() {
+        MenuItem smoothingItem = new MenuItem("Szkieletyzacja");
+        smoothingItem.setOnAction(e -> new ThinningWindow(image, this));
+        return smoothingItem;
+    }
+
 
     private void printHistogram() {
         HistogramPainter histogramPainter = new HistogramPainter(image);

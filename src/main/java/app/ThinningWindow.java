@@ -162,8 +162,7 @@ public class ThinningWindow {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         stage.setScene(scene);
-        stage.getIcons().add(new Image("PIKAsso-icon.jpg"));
-        stage.setTitle("Ścienianie");
+        stage.setTitle("Szkieletyzacja");
         save.requestFocus();
         stage.showAndWait();
     }
