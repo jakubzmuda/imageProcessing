@@ -20,7 +20,6 @@ import java.util.List;
 
 import static app.LinearFilters.SMOOTH_1;
 import static app.LinearFilters.SMOOTH_2;
-import static javafx.geometry.Orientation.VERTICAL;
 
 /**
  * Klasa reprezentująca okno wygładzania obrazu.
@@ -66,7 +65,7 @@ public class SmoothLinearWindow {
     private Stage stage;
     private VBox vBox;
     private HBox hBox;
-    private Slider slider;
+    private TextField slider;
 
     /**
      * Obrazy przed i po operacji.
@@ -118,6 +117,7 @@ public class SmoothLinearWindow {
         mask1.setSelected(true);
         handleOptionChanges(options);
         HBox radioHBox = new HBox(mask1, mask2, maskK1, maskK2);
+        radioHBox.setAlignment(Pos.CENTER);
         radioHBox.setSpacing(15);
 
         currentMask = SMOOTH_1;
@@ -135,11 +135,7 @@ public class SmoothLinearWindow {
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
 
-        Button cancel = new Button("Odrzuć");
-        cancel.setOnAction(event -> {
-            stage.close();
-        });
-        Button save = new Button("Zachowaj");
+        Button save = new Button("Kontynuuj");
         save.setOnAction(event -> {
             app.updateImage(after);
             stage.close();
@@ -148,32 +144,22 @@ public class SmoothLinearWindow {
         VBox parametrizedSlider = new VBox(kSliderHbox);
         parametrizedSlider.setSpacing(5);
         parametrizedSlider.setAlignment(Pos.CENTER);
-        Slider timesSlider = new Slider(1, 32, 1);
-        timesSlider.setPrefWidth(100);
-        Label timesValue = new Label("1x");
-        timesValue.setPrefWidth(30);
-        timesSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            timesValue.setText(newValue.intValue() + "x");
-            times = newValue.intValue();
-            reloadPreview();
-        });
 
         VBox radioAndKSliderVBox = new VBox(radioHBox, parametrizedSlider);
         radioAndKSliderVBox.setSpacing(15);
         radioAndKSliderVBox.setAlignment(Pos.CENTER);
-        HBox buttonsHbox = new HBox(cancel, save);
-        HBox timesSliderHBox = new HBox(timesSlider, timesValue);
-        VBox buttonsTimesVbox = new VBox(timesSliderHBox, buttonsHbox);
+        HBox buttonsHbox = new HBox(save);
+        buttonsHbox.setAlignment(Pos.CENTER);
+        VBox buttonsTimesVbox = new VBox(buttonsHbox);
 
         VBox borderVBox = createBorderOptions();
 
-        HBox buttons = new HBox(radioAndKSliderVBox,
-                new Separator(VERTICAL), borderVBox,
-                new Separator(VERTICAL), buttonsTimesVbox);
+        VBox buttons = new VBox(radioAndKSliderVBox,
+                borderVBox,
+                buttonsTimesVbox);
         buttons.setPadding(new Insets(13, 10, 10, 0));
         buttons.setSpacing(15);
-        buttons.setMaxHeight(OPTIONS_HEIGHT);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.setAlignment(Pos.CENTER);
         vBox = new VBox(hBox, buttons);
 
         Scene scene = createScene(beforeImageViewHbox, afterImageViewHbox);
@@ -196,8 +182,7 @@ public class SmoothLinearWindow {
      */
     private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        double windowHeight = afterImageView.getBoundsInLocal().getHeight() + OPTIONS_HEIGHT;
-        Scene scene = new Scene(vBox, windowWidth, windowHeight);
+        Scene scene = new Scene(vBox, windowWidth, 900);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
@@ -226,7 +211,6 @@ public class SmoothLinearWindow {
      */
     private void changeCurrentMask(Toggle newValue) {
         String maskName = newValue.getUserData().toString();
-        handleSlider(maskName);
 
         masks.stream()
                 .filter(mask -> maskName.equals(mask.getName()))
@@ -262,12 +246,12 @@ public class SmoothLinearWindow {
      * @return obszar ze Sliderem
      */
     private HBox createSliderHBox() {
-        Label value = new Label("k = 1");
+        Label value = new Label("k = ");
         value.setPrefWidth(35);
         createSlider(value);
 
-        HBox sliderHbox = new HBox(slider, value);
-        sliderHbox.setAlignment(Pos.TOP_RIGHT);
+        HBox sliderHbox = new HBox(value, slider);
+        sliderHbox.setAlignment(Pos.CENTER);
         sliderHbox.setSpacing(5);
         return sliderHbox;
     }
@@ -311,26 +295,20 @@ public class SmoothLinearWindow {
         replicatedBorder.setToggleGroup(borderTypeGroup);
         replicatedBorder.setSelected(true);
 
-        RadioButton reflectedBorder = new RadioButton("Powielenie pikseli brzegowych");
+        RadioButton reflectedBorder = new RadioButton("Powielenie");
         reflectedBorder.setUserData(Core.BORDER_REPLICATE);
         reflectedBorder.setToggleGroup(borderTypeGroup);
 
-        RadioButton existingBorder = new RadioButton("Istniejące sąsiedztwo");
+        RadioButton existingBorder = new RadioButton("Istniejące");
         existingBorder.setUserData(Core.BORDER_DEFAULT);
         existingBorder.setToggleGroup(borderTypeGroup);
-
-        RadioButton minimum = new RadioButton("Wartość minimalna");
-        minimum.setUserData(BORDER_MINIMUM);
-        minimum.setToggleGroup(borderTypeGroup);
-
-        RadioButton maximum = new RadioButton("Wartość maksymalna");
-        maximum.setUserData(BORDER_MAXIMUM);
-        maximum.setToggleGroup(borderTypeGroup);
 
         borderTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue)
                 -> handleBorderOptionChange(newValue));
 
-        return new VBox(borderTypeLabel, replicatedBorder, reflectedBorder, existingBorder, minimum, maximum);
+        VBox vBox = new VBox(borderTypeLabel, replicatedBorder, reflectedBorder, existingBorder);
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
     }
 
     /**
@@ -361,42 +339,24 @@ public class SmoothLinearWindow {
      * @param value Label z wyświetlaną wartością
      */
     private void createSlider(Label value) {
-        slider = new Slider(MIN_LEVEL, MAX_LEVEL, MIN_LEVEL);
-        slider.setDisable(true);
-        slider.setPrefWidth(100);
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            slider.setValue(newValue.intValue());
-            value.setText("k = " + newValue.intValue());
-            parametrized1.updateMiddleElement(newValue.intValue());
-            parametrized2.updateMiddleElement(newValue.intValue());
+        TextField kField = new TextField("1");
+
+        this.slider = kField;
+
+        kField.textProperty().addListener((observable, oldValue, newValue) -> {
+            parametrized1.updateMiddleElement(Integer.parseInt(newValue));
+            parametrized2.updateMiddleElement(Integer.parseInt(newValue));
             reloadPreview();
         });
-    }
 
-    /**
-     * Sprawdza czy wybrana przez użytkownika maska jest parametryzowana
-     * i jeśli tak, to odblokowuje możliwość ustawienia wartości parametru k
-     * w masce. Jeśli nie, to blokuje tę możliwość.
-     *
-     * @param maskName nazwa maski
-     */
-    private void handleSlider(String maskName) {
-        if (isCurrentMaskParametrized(maskName)) {
-            slider.setDisable(false);
-        } else {
-            slider.setDisable(true);
-        }
-    }
-
-    /**
-     * Sprawdza, czy maska jest parametryzowana.
-     *
-     * @param maskName nazwa maski
-     * @return <tt>true</tt> jeśli maska jest parametryzowana
-     */
-    private boolean isCurrentMaskParametrized(String maskName) {
-        return maskName.equals(parametrized1.getName()) ||
-                maskName.equals(parametrized2.getName());
+        kField.setPrefWidth(100);
+//        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            slider.setValue(newValue.intValue());
+//            value.setText("k = " + newValue.intValue());
+//            parametrized1.updateMiddleElement(newValue.intValue());
+//            parametrized2.updateMiddleElement(newValue.intValue());
+//            reloadPreview();
+//        });
     }
 
     /**

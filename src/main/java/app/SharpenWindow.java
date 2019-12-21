@@ -198,16 +198,16 @@ public class SharpenWindow {
         ToggleGroup borderTypeGroup = new ToggleGroup();
         Label borderTypeLabel = new Label("Piksele brzegowe:");
 
-        RadioButton replicatedBorder = new RadioButton("Bez zmian");
+        RadioButton replicatedBorder = new RadioButton("Bez");
         replicatedBorder.setUserData(Core.BORDER_CONSTANT);
         replicatedBorder.setToggleGroup(borderTypeGroup);
         replicatedBorder.setSelected(true);
 
-        RadioButton reflectedBorder = new RadioButton("Powielenie pikseli brzegowych");
+        RadioButton reflectedBorder = new RadioButton("Powielenie");
         reflectedBorder.setUserData(Core.BORDER_REPLICATE);
         reflectedBorder.setToggleGroup(borderTypeGroup);
 
-        RadioButton existingBorder = new RadioButton("Istniejące sąsiedztwo");
+        RadioButton existingBorder = new RadioButton("Istniejące");
         existingBorder.setUserData(Core.BORDER_DEFAULT);
         existingBorder.setToggleGroup(borderTypeGroup);
 
