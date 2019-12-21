@@ -200,7 +200,7 @@ public class MorphologyWindow {
     private VBox createOperationVBox() {
         ToggleGroup operations = new ToggleGroup();
         RadioButton erode = createButton(operations, Imgproc.MORPH_ERODE, "Erozja");
-        RadioButton dilate = createButton(operations, Imgproc.MORPH_DILATE, "Dylatacja");
+        RadioButton dilate = createButton(operations, Imgproc.MORPH_DILATE, "Dylacja");
         RadioButton open = createButton(operations, Imgproc.MORPH_OPEN, "Otwarcie");
         RadioButton close = createButton(operations, Imgproc.MORPH_CLOSE, "Zamknięcie");
 
