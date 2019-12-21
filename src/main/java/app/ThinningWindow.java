@@ -238,7 +238,6 @@ public class ThinningWindow {
         afterImageView.setPreserveRatio(true);
         afterImageView.setFitWidth(400);
         afterImageView.setFitHeight(400);
-        // TODO new HistogramWindow(afterImageView);
     }
 
     /**
@@ -249,8 +248,6 @@ public class ThinningWindow {
         beforeImageView.setPreserveRatio(true);
         beforeImageView.setFitWidth(400);
         beforeImageView.setFitHeight(400);
-
-        // TODO new HistogramWindow(beforeImageView);
     }
 
     /**

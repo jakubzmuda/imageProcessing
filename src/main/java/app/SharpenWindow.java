@@ -44,12 +44,16 @@ public class SharpenWindow {
      */
     private static final int MINIMAL_WIDTH = 550;
     private final App app;
+    private final VBox afterImageViewHbox;
 
     /**
      * Podgląd obrazu przed i po operacji.
      */
     private ImageView beforeImageView;
     private ImageView afterImageView;
+
+    private BarChart<String, Number> beforeImageHistogram;
+    private BarChart<String, Number> afterImageHistogram;
 
     /**
      * Elementy okna.
@@ -115,9 +119,13 @@ public class SharpenWindow {
         createBeforeImageView();
         createAfterImageView();
 
-        HBox beforeImageViewHbox = new HBox(beforeImageView);
+        this.beforeImageHistogram = buildHistogram(beforeImageView.getImage());
+        this.afterImageHistogram = buildHistogram(afterImageView.getImage());
+
+        VBox beforeImageViewHbox = new VBox(beforeImageView, beforeImageHistogram);
         beforeImageViewHbox.setAlignment(Pos.CENTER);
-        HBox afterImageViewHbox = new HBox(afterImageView);
+        VBox afterImageViewHbox = new VBox(afterImageView, afterImageHistogram);
+        this.afterImageViewHbox = afterImageViewHbox;
         afterImageViewHbox.setAlignment(Pos.CENTER);
         hBox = new HBox(beforeImageViewHbox, afterImageViewHbox);
         hBox.setAlignment(Pos.CENTER);
@@ -170,9 +178,9 @@ public class SharpenWindow {
      * @param afterImageViewHbox  obszar z podglądem obrazu po zmianach
      * @return <tt>Scene</tt> z układem okna
      */
-    private Scene createScene(HBox beforeImageViewHbox, HBox afterImageViewHbox) {
+    private Scene createScene(VBox beforeImageViewHbox, VBox afterImageViewHbox) {
         double windowWidth = Math.max(MINIMAL_WIDTH, afterImageView.getBoundsInLocal().getWidth() * 2);
-        Scene scene = new Scene(vBox, windowWidth, 600);
+        Scene scene = new Scene(vBox, windowWidth, 900);
         scene.setOnKeyPressed(event -> {
             if (KeyCode.ESCAPE.equals(event.getCode())) stage.close();
         });
@@ -344,6 +352,9 @@ public class SharpenWindow {
     private void reloadPreview() {
         after = applyMask(currentMask);
         afterImageView.setImage(after);
+
+        this.afterImageHistogram = buildHistogram(after);
+        afterImageViewHbox.getChildren().set(1, this.afterImageHistogram);
     }
 
     /**
@@ -399,8 +410,8 @@ public class SharpenWindow {
         HistogramPainter histogramPainter = new HistogramPainter(image);
         BarChart<String, Number> histogram = histogramPainter.paintChart();
 
-        histogram.setMaxWidth(300);
-        histogram.setMaxHeight(300);
+        histogram.setMaxWidth(200);
+        histogram.setMaxHeight(200);
 
         histogram.getData().addAll(
                 histogramPainter.getSeriesRed(),
