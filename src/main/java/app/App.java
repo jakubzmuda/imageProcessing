@@ -342,7 +342,7 @@ public class App extends Application {
 
     private MenuItem buildSmoothingMenuItem() {
         MenuItem smoothingItem = new MenuItem("Wygładzanie");
-        smoothingItem.setOnAction(e -> new Lab3(image, this).smoothing());
+        smoothingItem.setOnAction(e -> new SmoothLinearWindow(image, this));
         return smoothingItem;
     }
 
