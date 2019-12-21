@@ -328,26 +328,18 @@ public class CombineMasksWindow {
         replicatedBorder.setToggleGroup(borderTypeGroup);
         replicatedBorder.setSelected(true);
 
-        RadioButton reflectedBorder = new RadioButton("Powielenie pikseli brzegowych");
+        RadioButton reflectedBorder = new RadioButton("Powielenie");
         reflectedBorder.setUserData(Core.BORDER_REPLICATE);
         reflectedBorder.setToggleGroup(borderTypeGroup);
 
-        RadioButton existingBorder = new RadioButton("Istniejące sąsiedztwo");
+        RadioButton existingBorder = new RadioButton("Istniejące");
         existingBorder.setUserData(Core.BORDER_DEFAULT);
         existingBorder.setToggleGroup(borderTypeGroup);
-
-        RadioButton minimum = new RadioButton("Wartość minimalna");
-        minimum.setUserData(BORDER_MINIMUM);
-        minimum.setToggleGroup(borderTypeGroup);
-
-        RadioButton maximum = new RadioButton("Wartość maksymalna");
-        maximum.setUserData(BORDER_MAXIMUM);
-        maximum.setToggleGroup(borderTypeGroup);
 
         borderTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue)
                 -> handleBorderOptionChange(newValue));
 
-        VBox borderVbox = new VBox(borderTypeLabel, replicatedBorder, reflectedBorder, existingBorder, minimum, maximum);
+        VBox borderVbox = new VBox(borderTypeLabel, replicatedBorder, reflectedBorder, existingBorder);
         borderVbox.setAlignment(Pos.CENTER);
         return borderVbox;
     }
@@ -380,17 +372,17 @@ public class CombineMasksWindow {
      */
     private VBox createScalingOptions() {
         ToggleGroup scalingTypeGroup = new ToggleGroup();
-        Label borderTypeLabel = new Label("Metoda skalowania:");
+        Label borderTypeLabel = new Label("Skalowanie");
 
-        RadioButton method1 = new RadioButton("Równomierna");
+        RadioButton method1 = new RadioButton("Równomierne");
         method1.setUserData(METHOD_1);
         method1.setToggleGroup(scalingTypeGroup);
 
-        RadioButton method2 = new RadioButton("Trójwartościowa");
+        RadioButton method2 = new RadioButton("Trójwartościowe");
         method2.setUserData(METHOD_2);
         method2.setToggleGroup(scalingTypeGroup);
 
-        RadioButton method3 = new RadioButton("Odcinająca");
+        RadioButton method3 = new RadioButton("Obcinające");
         method3.setUserData(METHOD_3);
         method3.setToggleGroup(scalingTypeGroup);
         method3.setSelected(true);
